@@ -28,3 +28,5 @@ python3 verification/verifier_aide_vocabulaire.py
 - Vocabulary: whole phrasal verbs, contextual suggestions, all senses, isolated saved words, keyboard controls, mobile modal and export.
 
 WebKit availability is reported by the mobile script. Chromium touch emulation does not prove Safari compatibility. Optionally install WebKit with `python3 -m playwright install webkit`.
+
+The public application at `https://eliasbellouti.com/demos/toeic/TOEIC_Lab.html` was also checked over HTTPS on November 4, 2026: 66 mobile states, 10 visitor-session checks, 57 complete expressions, JSON export and a full browser close/reopen. Those application checks reported no JavaScript errors; the seven served application files matched the tested repository. Portfolio navigation is verified separately, since its navigation and prefetch behavior belongs to the hosting project.
