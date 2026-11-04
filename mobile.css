@@ -1,0 +1,43 @@
+/* Mobile refinements: keep every control and learning panel within the viewport. */
+@media (max-width: 1024px) {
+  .v7-main, .v20-container, .v20-context, .v7-practice,
+  .v16-word, .v16-card, .v16-tabs, .v16-review, .v7-question-paper {
+    min-width: 0;
+  }
+  .v16-tabs, .v16-tabbar { flex-wrap: wrap; overflow: visible; }
+  .v16-tab { white-space: normal; }
+  .v7-main button, .v7-header button, .v8-overlay button,
+  .g-overlay button, .gs-sheet-overlay button,
+  .tl-dialog button, .v7-main summary {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  .v7-main input:not([type="checkbox"]):not([type="radio"]),
+  .v7-main select, .v7-main textarea {
+    min-height: 44px;
+    max-width: 100%;
+    font-size: 16px;
+  }
+  .tl-dialog [data-tl-close] { width: 44px; height: 44px; }
+  .v7-main img, .v7-main svg { max-width: 100%; }
+  .v7-main :focus-visible, .v7-header :focus-visible {
+    outline: 3px solid #488cc1;
+    outline-offset: 3px;
+  }
+}
+@media (max-width: 560px) {
+  .v20-nav { width: 100%; box-sizing: border-box; }
+  .v20-nav button { min-width: 0; flex: 1; padding: 9px 5px; font-size: 11px; white-space: normal; }
+  .v20-hero-actions .v20-btn { white-space: normal; text-align: left; }
+  .v16-tabs, .v16-tabbar { gap: 6px; }
+  .v16-tab { flex: 1 1 auto; padding: 10px 12px; }
+  .v7-main { overflow-wrap: anywhere; }
+  .tl-dialog { overflow-wrap: anywhere; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v7-main *, .v8-overlay *, .tl-dialog * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

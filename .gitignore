@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+sauvegardes/
+*sauvegarde*.json
+node_modules/
