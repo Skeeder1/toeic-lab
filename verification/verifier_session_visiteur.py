@@ -93,6 +93,10 @@ def run():
         assert page.evaluate('ToeicVisitor.id') == visitor_id
         assert not page.locator('#tvPanel').is_visible()
         assert page.evaluate('JSON.parse(localStorage.getItem("toeiclab.v6.draft"))') == draft
+        restored = page.evaluate('JSON.parse(JSON.stringify(v6Session))')
+        for field in ['index', 'items', 'answers']:
+            assert restored[field] == draft[field], field
+        assert page.locator('#v7Next').is_enabled()
         assert page.evaluate('window.__toeicVocabBridge.list().some(x=>x.term==="visitor persistence")')
         checks.append('Accord : identifiant, réponse, séance et vocabulaire conservés après fermeture complète et réouverture')
         page.locator('[data-v20-nav="progress"]').first.click()
