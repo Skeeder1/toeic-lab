@@ -1,0 +1,5 @@
+publication/
+*.png
+*.json
+*.log
+__pycache__/

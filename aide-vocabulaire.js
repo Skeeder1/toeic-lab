@@ -154,7 +154,7 @@
   document.addEventListener('pointerout',e=>{if(e.target.closest?.('[data-tl-term]')&&!tooltip?.contains(e.relatedTarget))deferHide();});
   document.addEventListener('focusin',e=>{const el=e.target.closest?.('[data-tl-term]');if(el)showTooltip(el);});
   document.addEventListener('focusout',e=>{if(!tooltip?.contains(e.relatedTarget))deferHide();});
-  document.addEventListener('scroll',removeTooltip,true);
+  document.addEventListener('scroll',e=>{if(e.target===document||e.target?.contains?.(tooltipAnchor))removeTooltip();},true);
   window.addEventListener('resize',removeTooltip);
   document.addEventListener('click',e=>{
     const el=e.target.closest?.('[data-tl-term]');if(!el){if(!tooltip?.contains(e.target))removeTooltip();return;}
@@ -164,7 +164,7 @@
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){removeTooltip();return;}
     const el=e.target.closest?.('[data-tl-term]');
-    if(el&&el.tabIndex===0&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();showTooltip(el,true);tooltip?.querySelector('button')?.focus();}
+    if(el&&el.tabIndex===0&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();showTooltip(el,true);tooltip?.querySelector('button')?.focus({preventScroll:true});}
   },true);
 
   const originalRender=v6Render;

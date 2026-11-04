@@ -4,7 +4,13 @@
   const PREF = 'toeiclab.visitor.v1';
   const TEMP = '__toeicVisitor.overlay:';
   const CHOICE = '__toeicVisitor.choice';
-  const native = window.localStorage;
+  let native;
+  try { native = window.localStorage; } catch (_) {
+    // Storage access itself can be blocked. Keep the application usable in memory.
+    native = {length: 0, key: () => null, getItem: () => null,
+      setItem: () => {throw new Error('Storage unavailable');},
+      removeItem: () => {throw new Error('Storage unavailable');}};
+  }
   const memory = new Map();
   const isLearning = key => String(key).startsWith('toeiclab.') && key !== PREF;
   const readPreference = () => { try { return JSON.parse(native.getItem(PREF) || 'null'); } catch (_) { return null; } };
@@ -85,6 +91,18 @@
       update();
     }
   };
+  // A revocation in another tab must stop future permanent writes here as well.
+  window.addEventListener('storage', event => {
+    if (event.storageArea !== native || (event.key !== PREF && event.key !== null)) return;
+    const current = readPreference();
+    if (!current || current.mode !== 'persistent') {
+      persistent = false;
+      preference = current;
+      update(); announce();
+    } else if (!persistent) {
+      preference = current;
+    }
+  });
   const decline = () => {
     failure = '';
     if (persistent) {
@@ -101,7 +119,7 @@
     panel = document.createElement('section');
     panel.id = 'tvPanel'; panel.className = 'tv-panel'; panel.setAttribute('role', 'region'); panel.setAttribute('aria-labelledby', 'tvTitle');
     panel.hidden = persistent || tempGet(CHOICE) === 'temporary';
-    panel.innerHTML = '<h2 id="tvTitle">Retrouver votre progression</h2><p>Sans compte, votre progression et votre séance peuvent être gardées sur <strong>cet appareil et ce navigateur</strong>.</p><p>Aucun suivi publicitaire. Vos réponses restent dans votre navigateur et ne sont pas envoyées au serveur. La mémorisation utilise le stockage local, sans cookie.</p><p>Sans mémorisation, les nouvelles réponses seront perdues en rechargeant ou fermant cette page. Vos anciennes sauvegardes restent conservées. Exportez un JSON dans Progression pour changer d’appareil ou sauvegarder une copie.</p><p class="tv-status" data-tv-status role="status"></p><div class="tv-actions"><button type="button" data-tv-accept></button><button type="button" data-tv-temporary></button></div>';
+    panel.innerHTML = '<div class="tv-copy"><h2 id="tvTitle">Retrouver votre progression</h2><p>Sans compte, votre progression et votre séance peuvent être gardées sur <strong>cet appareil et ce navigateur</strong>.</p><p>Aucun suivi publicitaire. Vos réponses restent dans votre navigateur et ne sont pas envoyées au serveur. La mémorisation utilise le stockage local, sans cookie.</p><p>Sans mémorisation, les nouvelles réponses seront perdues en rechargeant ou fermant cette page. Vos anciennes sauvegardes restent conservées. Exportez un JSON dans Progression pour changer d’appareil ou sauvegarder une copie.</p><p class="tv-status" data-tv-status role="status"></p></div><div class="tv-actions"><button type="button" data-tv-accept></button><button type="button" data-tv-temporary></button></div>';
     document.body.append(trigger, panel);
     trigger.addEventListener('click', () => { panel.hidden = !panel.hidden; if (!panel.hidden) panel.querySelector('button').focus({preventScroll: true}); });
     panel.querySelector('[data-tv-accept]').addEventListener('click', accept);
