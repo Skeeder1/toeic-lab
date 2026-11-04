@@ -2,6 +2,8 @@
 
 Application personnelle d'entraînement à l'anglais : cours, exercices Reading, vocabulaire et progression. Démonstration : [ouvrir TOEIC Lab](https://eliasbellouti.com/demos/toeic/TOEIC_Lab.html).
 
+Adresse de secours indépendante du serveur domestique : [TOEIC Lab sur GitHub Pages](https://skeeder1.github.io/toeic-lab/TOEIC_Lab.html). Chaque adresse conserve sa progression séparément ; utiliser l'export/import JSON pour la transférer.
+
 Adaptation d'une application HTML fournie sous forme de ZIP. Les ajouts portent sur les expressions complètes, leurs sens dans le contexte anglais, l'ergonomie mobile et la mémorisation anonyme dans le navigateur. Ce projet n'est pas affilié à ETS et ne délivre pas de score officiel TOEIC.
 
 ## Utilisation
