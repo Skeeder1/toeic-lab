@@ -1,7 +1,5 @@
 """Exercise consent and persistence in disposable browser profiles, never the user's profile."""
 import functools
-import os
-import shutil
 import http.server
 import json
 import tempfile
@@ -11,8 +9,6 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent
 APP = ROOT.parent
-CHROMIUM_EXECUTABLE = os.environ.get("CHROMIUM_EXECUTABLE") or shutil.which("brave-browser") or shutil.which("chromium") or shutil.which("chromium-browser")
-(ROOT / "publication").mkdir(exist_ok=True)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args):
@@ -39,7 +35,7 @@ def run():
     checks, errors = [], []
     with tempfile.TemporaryDirectory(prefix='toeic-visitor-') as tmp, sync_playwright() as p:
         def launch(name, seed=None):
-            context = p.chromium.launch_persistent_context(str(Path(tmp) / name), executable_path=CHROMIUM_EXECUTABLE, headless=True, viewport={'width':390, 'height':844}, accept_downloads=True)
+            context = p.chromium.launch_persistent_context(str(Path(tmp) / name), executable_path='/usr/bin/brave-browser', headless=True, viewport={'width':390, 'height':844}, accept_downloads=True)
             context.add_init_script('window.__testNativeStorage = window.localStorage;')
             if seed:
                 context.add_init_script(f'if (!window.localStorage.getItem("__testSeeded")) {{ for (const [k,v] of Object.entries({json.dumps(seed)})) window.localStorage.setItem(k,v); window.localStorage.setItem("__testSeeded","yes"); }}')
@@ -99,20 +95,23 @@ def run():
         assert page.locator('#v7Next').is_enabled()
         assert page.evaluate('window.__toeicVocabBridge.list().some(x=>x.term==="visitor persistence")')
         checks.append('Accord : identifiant, réponse, séance et vocabulaire conservés après fermeture complète et réouverture')
-        page.locator('[data-v20-nav="progress"]').first.click()
+        page.locator("#tvSettings").click()
+        page.locator('[data-tv-profile-action="data"]').click()
         with page.expect_download() as download:
-            page.evaluate('window.__toeicV18.exportBackup()')
+            page.locator('[data-tv-export]').click()
         dest = Path(tmp)/'backup.json'
         download.value.save_as(dest)
         payload = json.loads(dest.read_text())
         assert any(x['term'] == 'visitor persistence' for x in payload['v10Vocabulary'])
         assert payload['v6Session']['answers'] == draft['answers']
         checks.append('Export JSON : vocabulaire et réponses de la séance présents')
+        page.keyboard.press('Escape')
         peer = context.new_page()
         peer.goto(url)
         peer.wait_for_selector('#tvSettings')
         assert peer.evaluate('ToeicVisitor.mode') == 'persistent'
         page.locator('#tvSettings').click()
+        page.locator('[data-tv-profile-action="data"]').click()
         page.locator('[data-tv-temporary]').click()
         peer.wait_for_function('ToeicVisitor.mode === "temporary"')
         peer.evaluate('localStorage.setItem("toeiclab.test.after-revocation","memory")')
@@ -143,23 +142,26 @@ def run():
         assert page.evaluate('__testNativeStorage.getItem("toeiclab.test.old")') == 'original'
         assert 'old-history' in page.evaluate('__testNativeStorage.getItem("toeiclab.history.v5")')
         page.locator('#tvSettings').click()
+        page.locator('[data-tv-profile-action="data"]').click()
         page.locator('[data-tv-accept]').click()
         assert page.evaluate('__testNativeStorage.getItem("toeiclab.test.old")') == 'temporary-change'
         assert 'old-history' in page.evaluate('__testNativeStorage.getItem("toeiclab.history.v5")')
         page.locator('#tvSettings').click()
+        page.locator('[data-tv-profile-action="data"]').click()
         page.locator('[data-tv-temporary]').click()
         assert page.evaluate('__testNativeStorage.getItem("toeiclab.test.old")') == 'temporary-change'
         assert page.evaluate('__testNativeStorage.getItem("toeiclab.visitor.v1")') is None
         checks.append('Historique existant préservé au refus et à l’accord ; changement de choix disponible sans suppression de la progression')
         page.evaluate('localStorage.setItem("toeiclab.test.old","my new answer"); __testNativeStorage.setItem("toeiclab.test.old","other tab")')
         page.locator('#tvSettings').click()
+        page.locator('[data-tv-profile-action="data"]').click()
         page.locator('[data-tv-accept]').click()
         assert 'autre onglet' in page.locator('[data-tv-status]').inner_text()
         assert page.evaluate('__testNativeStorage.getItem("toeiclab.test.old")') == 'other tab'
         assert page.evaluate('localStorage.getItem("toeiclab.test.old")') == 'my new answer'
         checks.append('Conflit entre onglets : aucune donnée permanente écrasée, séance temporaire toujours exportable')
         context.close()
-        blocked = p.chromium.launch_persistent_context(str(Path(tmp)/'blocked'), executable_path=CHROMIUM_EXECUTABLE, headless=True)
+        blocked = p.chromium.launch_persistent_context(str(Path(tmp)/'blocked'), executable_path='/usr/bin/brave-browser', headless=True)
         blocked.add_init_script("Object.defineProperty(window,'localStorage',{configurable:true,get:()=>{throw new DOMException('Blocked','SecurityError')}})")
         blocked_page = blocked.pages[0]
         blocked_page.on('pageerror', lambda error: errors.append(str(error)))

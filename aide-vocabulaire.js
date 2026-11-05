@@ -179,11 +179,6 @@
       card.setAttribute('role','group');card.setAttribute('aria-label','Choix '+(button.querySelector('.v7-letter')?.textContent||''));card.innerHTML=button.innerHTML;
       card.querySelectorAll('[data-tl-term]').forEach(word=>{word.tabIndex=0;word.setAttribute('role','button');});button.replaceWith(card);
     });
-    const actions=document.querySelector('.v7-translation-actions');
-    if(actions&&!actions.querySelector('[data-tl-question]')){
-      const b=document.createElement('button');b.type='button';b.dataset.tlQuestion='';b.textContent='Vocabulaire de la question';b.onclick=showQuestionVocabulary;actions.appendChild(b);
-    }
-    const hint=document.querySelector('.v8-help');if(hint)hint.textContent='Survole ou touche les mots soulignés : les expressions se traduisent ensemble.';
   };
   window.ToeicLexicon={lookup:(term,info={})=>{const e=entryFor(term);return e?{...e,suggested:contextual(e,info.sentence)}:null;},render,refresh};
   // V21/V23 questions register after the old draft restorers. Retry only when

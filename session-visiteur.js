@@ -58,17 +58,65 @@
   Object.defineProperty(window, 'localStorage', {configurable: true, get: () => facade});
 
   const makeId = () => window.crypto.randomUUID ? window.crypto.randomUUID() : Array.from(window.crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('');
-  let panel;
-  let trigger;
+  const PROFILE = 'toeiclab.ui.profile.v1';
+  const tones = ['indigo', 'blue', 'teal', 'rose'];
+  const sanitizeProfile = value => {
+    if (!value || typeof value !== 'object' || value.version !== 1) return null;
+    return {version: 1, name: typeof value.name === 'string' ? value.name.trim().slice(0, 40) : '',
+      avatar: tones.includes(value.avatar) ? value.avatar : 'indigo',
+      photo: typeof value.photo === 'string' && value.photo.length <= 180000 && /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value.photo) ? value.photo : ''};
+  };
+  const loadProfile = () => { try { return sanitizeProfile(JSON.parse(getItem(PROFILE) || 'null')) || {version: 1, name: '', avatar: 'indigo', photo: ''}; } catch (_) { return {version: 1, name: '', avatar: 'indigo', photo: ''}; } };
+  let profile = loadProfile();
+  let draftProfile;
+  let panel, trigger, menu, editor;
+  let photoRequest = 0;
+  const avatarIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20v-1.5a6.5 6.5 0 0 1 13 0V20"/></svg>';
+  const icons = {
+    progress: '<path d="M4 18V6m0 12h16M8 14l4-5 4 3 4-7"/>',
+    words: '<path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a3 3 0 0 0-2 1 3 3 0 0 0-2-1H4zM12 5v15"/>',
+    edit: '<path d="m5 16-1 4 4-1L20 7l-3-3zM14 7l3 3"/>',
+    data: '<path d="M12 3v12m-4-4 4 4 4-4M5 16v5h14v-5"/>'
+  };
+  const paintAvatar = (element, value) => {
+    element.dataset.tone = value.avatar;
+    element.replaceChildren();
+    if (value.photo) { const img = document.createElement('img'); img.src = value.photo; img.alt = ''; element.append(img); }
+    else element.innerHTML = avatarIcon;
+  };
+  const menuButtons = () => [...menu.querySelectorAll('[role="menuitem"]')];
+  const closeMenu = (restore = true) => {
+    if (!menu) return;
+    menu.hidden = true; trigger.setAttribute('aria-expanded', 'false');
+    if (restore && trigger.isConnected) trigger.focus({preventScroll: true});
+  };
+  const close = () => { if (panel.open) panel.close(); };
+  const openPanel = () => {
+    closeMenu(false);
+    if (editor.open) editor.close();
+    update();
+    if (!panel.open) panel.showModal();
+    panel.querySelector(persistent ? '[data-tv-export]' : '[data-tv-accept]').focus({preventScroll: true});
+  };
+  const placeTrigger = () => {
+    const slot = document.querySelector('[data-tv-profile-slot]') || document.querySelector('.v7-header');
+    if (slot && trigger.parentNode !== slot) { slot.append(trigger); closeMenu(false); }
+  };
   const announce = () => window.dispatchEvent(new CustomEvent('toeic-visitor-change', {detail: {persistent, mode: persistent ? 'persistent' : 'temporary'}}));
   const update = () => {
     if (!panel) return;
-    panel.querySelector('[data-tv-status]').textContent = failure || (persistent ? 'Mémorisation activée sur ce navigateur.' : 'Mode temporaire : les nouvelles réponses seront perdues en rechargeant ou fermant cette page.');
-    panel.querySelector('[data-tv-accept]').textContent = persistent ? 'Garder la mémorisation' : 'Mémoriser sur cet appareil';
-    panel.querySelector('[data-tv-temporary]').textContent = persistent ? 'Passer en mode temporaire' : 'Continuer sans mémoriser';
-    trigger.textContent = persistent ? 'Mémorisation activée' : 'Mémorisation';
+    panel.querySelector('#tvTitle').textContent = persistent ? 'Mes données' : 'Garder ma progression';
+    panel.querySelector('[data-tv-intro]').textContent = persistent ? 'Tes séances et tes mots restent disponibles sur ce navigateur.' : 'Retrouve tes séances et tes mots lors de ta prochaine visite.';
+    panel.querySelector('[data-tv-status]').textContent = failure || (persistent ? 'Mémorisation activée.' : 'Sans mémorisation, les nouvelles réponses disparaissent en rechargeant ou fermant la page.');
+    panel.querySelector('[data-tv-accept]').textContent = 'Mémoriser';
+    panel.querySelector('[data-tv-accept]').hidden = persistent;
+    panel.querySelector('[data-tv-temporary]').textContent = persistent ? 'Passer en mode temporaire' : 'Plus tard';
+    panel.querySelector('[data-tv-backups]').hidden = !persistent;
+    menu.querySelector('[data-tv-profile-name]').textContent = profile.name || 'Mon profil';
+    menu.querySelector('[data-tv-profile-mode]').textContent = persistent ? 'Progression mémorisée' : 'Mode temporaire';
+    paintAvatar(trigger, profile);
+    paintAvatar(menu.querySelector('[data-tv-menu-avatar]'), profile);
   };
-  const close = () => { panel.hidden = true; trigger.focus({preventScroll: true}); };
   const accept = () => {
     failure = '';
     const pending = overlayKeys().map(key => [key, overlay(key)]).filter(([, row]) => row);
@@ -112,21 +160,127 @@
     tempSet(CHOICE, 'temporary');
     update(); announce(); close();
   };
+  const openEditor = () => {
+    closeMenu(false);
+    draftProfile = {...profile};
+    editor.querySelector('[data-tv-name]').value = draftProfile.name;
+    editor.querySelector('[data-tv-profile-status]').textContent = '';
+    editor.querySelector('[data-tv-photo]').value = '';
+    editor.querySelector('[data-tv-save-profile]').disabled = false;
+    refreshEditor();
+    editor.showModal();
+  };
+  const refreshEditor = () => {
+    paintAvatar(editor.querySelector('[data-tv-preview]'), draftProfile);
+    editor.querySelector('[data-tv-remove-photo]').hidden = !draftProfile.photo;
+    editor.querySelectorAll('[data-tv-avatar]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.tvAvatar === draftProfile.avatar)));
+  };
+  const navigate = destination => {
+    closeMenu(false);
+    // Use the application's existing pause action before leaving an exercise.
+    document.querySelector('#v18Pause')?.click();
+    window.ToeicNavigation?.go(destination);
+    placeTrigger();
+    const title = document.querySelector('.v7-main h1');
+    if (title) { title.tabIndex = -1; title.focus({preventScroll: true}); }
+  };
   const mount = () => {
     trigger = document.createElement('button');
     trigger.type = 'button'; trigger.className = 'tv-settings'; trigger.id = 'tvSettings';
-    trigger.setAttribute('aria-controls', 'tvPanel');
-    panel = document.createElement('section');
-    panel.id = 'tvPanel'; panel.className = 'tv-panel'; panel.setAttribute('role', 'region'); panel.setAttribute('aria-labelledby', 'tvTitle');
-    panel.hidden = persistent || tempGet(CHOICE) === 'temporary';
-    panel.innerHTML = '<div class="tv-copy"><h2 id="tvTitle">Retrouver votre progression</h2><p>Sans compte, votre progression et votre séance peuvent être gardées sur <strong>cet appareil et ce navigateur</strong>.</p><p>Aucun suivi publicitaire. Vos réponses restent dans votre navigateur et ne sont pas envoyées au serveur. La mémorisation utilise le stockage local, sans cookie.</p><p>Sans mémorisation, les nouvelles réponses seront perdues en rechargeant ou fermant cette page. Vos anciennes sauvegardes restent conservées. Exportez un JSON dans Progression pour changer d’appareil ou sauvegarder une copie.</p><p class="tv-status" data-tv-status role="status"></p></div><div class="tv-actions"><button type="button" data-tv-accept></button><button type="button" data-tv-temporary></button></div>';
-    document.body.append(trigger, panel);
-    trigger.addEventListener('click', () => { panel.hidden = !panel.hidden; if (!panel.hidden) panel.querySelector('button').focus({preventScroll: true}); });
+    trigger.setAttribute('aria-label', 'Mon profil');
+    trigger.setAttribute('title', 'Mon profil');
+    trigger.setAttribute('aria-controls', 'tvProfileMenu');
+    trigger.setAttribute('aria-haspopup', 'menu');
+    trigger.setAttribute('aria-expanded', 'false');
+    menu = document.createElement('section');
+    menu.id = 'tvProfileMenu'; menu.className = 'tv-profile-menu'; menu.hidden = true;
+    menu.setAttribute('role', 'menu'); menu.setAttribute('aria-label', 'Mon profil');
+    menu.innerHTML = '<div class="tv-menu-heading" role="presentation"><span class="tv-avatar" data-tv-menu-avatar></span><div><strong data-tv-profile-name></strong><small data-tv-profile-mode></small></div></div>' +
+      [['progress','Ma progression'],['words','Mes mots'],['edit','Modifier mon profil'],['data','Mes données']].map(([action,label]) =>
+        '<button type="button" role="menuitem" data-tv-profile-action="' + action + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">' + icons[action] + '</svg><span>' + label + '</span></button>').join('');
+    panel = document.createElement('dialog');
+    panel.id = 'tvPanel'; panel.className = 'tv-panel'; panel.setAttribute('aria-labelledby', 'tvTitle');
+    panel.innerHTML = '<header class="tv-dialog-heading"><h2 id="tvTitle"></h2><button type="button" data-tv-close aria-label="Fermer">×</button></header><div class="tv-copy"><p data-tv-intro></p><p class="tv-status" data-tv-status role="status"></p><div class="tv-backups" data-tv-backups><button type="button" data-tv-export>Exporter ma progression</button><button type="button" data-tv-import>Importer une sauvegarde</button><input type="file" data-tv-import-file accept=".json,application/json" hidden></div><details><summary>Confidentialité et sauvegardes</summary><p>Le profil est local, sans compte connecté ni suivi publicitaire. Les données ne sont pas envoyées au serveur. La mémorisation utilise le stockage de ce navigateur, sans cookie.</p><p>Exporte une sauvegarde JSON pour changer de navigateur ou d’appareil. Le mode temporaire conserve les anciennes données, mais ne garde pas les nouvelles réponses après fermeture ou rechargement.</p></details></div><div class="tv-actions"><button type="button" data-tv-accept></button><button type="button" data-tv-temporary></button></div>';
+    editor = document.createElement('dialog');
+    editor.id = 'tvProfileEditor'; editor.className = 'tv-panel tv-profile-editor'; editor.setAttribute('aria-labelledby', 'tvProfileTitle');
+    editor.innerHTML = '<form><header class="tv-dialog-heading"><h2 id="tvProfileTitle">Mon profil</h2><button type="button" data-tv-close aria-label="Fermer">×</button></header><div class="tv-copy"><div class="tv-profile-photo"><span class="tv-avatar" data-tv-preview></span><div><label class="tv-photo-label">Choisir une photo<input type="file" data-tv-photo accept="image/png,image/jpeg,image/webp" hidden></label><button type="button" data-tv-remove-photo>Retirer la photo</button></div></div><label class="tv-name-label">Prénom ou pseudo<input type="text" data-tv-name maxlength="40" autocomplete="nickname" placeholder="Ton prénom"></label><fieldset><legend>Couleur de l’avatar</legend><div class="tv-avatar-colors">' +
+      tones.map((tone,i) => '<button type="button" data-tv-avatar="' + tone + '" data-tone="' + tone + '" aria-label="' + ['Indigo','Bleu','Vert','Rose'][i] + '" aria-pressed="false">' + avatarIcon + '</button>').join('') +
+      '</div></fieldset><p class="tv-profile-status" data-tv-profile-status role="status"></p><p class="tv-local-note">Ce profil reste dans ton navigateur.</p></div><div class="tv-actions"><button type="submit" data-tv-save-profile>Enregistrer</button></div></form>';
+    document.body.append(trigger, menu, panel, editor);
+    placeTrigger();
+    new MutationObserver(placeTrigger).observe(document.getElementById('v6App') || document.body, {childList: true, subtree: true});
+    trigger.addEventListener('click', () => {
+      if (!menu.hidden) { closeMenu(); return; }
+      update(); menu.hidden = false; trigger.setAttribute('aria-expanded', 'true');
+      const box = trigger.getBoundingClientRect();
+      menu.style.top = Math.max(10, Math.min(box.bottom + 10, innerHeight - menu.offsetHeight - 12)) + 'px';
+      menuButtons()[0].focus({preventScroll: true});
+    });
+    trigger.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); if (menu.hidden) trigger.click(); (event.key === 'ArrowUp' ? menuButtons().at(-1) : menuButtons()[0]).focus(); }
+    });
+    menu.addEventListener('keydown', event => {
+      const buttons = menuButtons(), index = buttons.indexOf(document.activeElement);
+      if (event.key === 'Escape') { event.preventDefault(); closeMenu(); }
+      else if (['ArrowDown','ArrowUp','Home','End'].includes(event.key)) {
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+        buttons[next].focus();
+      } else if (event.key === 'Tab') closeMenu(false);
+    });
+    menu.addEventListener('click', event => {
+      const action = event.target.closest('[data-tv-profile-action]')?.dataset.tvProfileAction;
+      if (action === 'data') openPanel();
+      else if (action === 'edit') openEditor();
+      else if (action) navigate(action === 'words' ? 'vocab' : 'progress');
+    });
+    document.addEventListener('pointerdown', event => { if (!menu.hidden && !menu.contains(event.target) && !trigger.contains(event.target)) closeMenu(false); });
+    window.addEventListener('resize', () => closeMenu(false));
+    for (const dialog of [panel, editor]) {
+      dialog.querySelector('[data-tv-close]').addEventListener('click', () => dialog.close());
+      dialog.addEventListener('close', () => { if (dialog === editor) photoRequest++; if (trigger.isConnected) trigger.focus({preventScroll: true}); });
+      dialog.addEventListener('click', event => {
+        if (event.target !== dialog) return;
+        const box = dialog.getBoundingClientRect();
+        if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
+      });
+    }
     panel.querySelector('[data-tv-accept]').addEventListener('click', accept);
     panel.querySelector('[data-tv-temporary]').addEventListener('click', decline);
-    panel.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
+    panel.querySelector('[data-tv-export]').addEventListener('click', () => window.__toeicV18?.exportBackup());
+    panel.querySelector('[data-tv-import]').addEventListener('click', () => panel.querySelector('[data-tv-import-file]').click());
+    panel.querySelector('[data-tv-import-file]').addEventListener('change', event => window.__toeicV18?.importBackup(event.target.files?.[0]));
+    editor.querySelectorAll('[data-tv-avatar]').forEach(button => button.addEventListener('click', () => { draftProfile.avatar = button.dataset.tvAvatar; refreshEditor(); }));
+    editor.querySelector('[data-tv-remove-photo]').addEventListener('click', () => { photoRequest++; draftProfile.photo = ''; editor.querySelector('[data-tv-photo]').value = ''; editor.querySelector('[data-tv-save-profile]').disabled = false; refreshEditor(); });
+    editor.querySelector('[data-tv-photo]').addEventListener('change', async event => {
+      const file = event.target.files?.[0], request = ++photoRequest;
+      const status = editor.querySelector('[data-tv-profile-status]');
+      status.textContent = '';
+      editor.querySelector('[data-tv-save-profile]').disabled = false;
+      if (!file) return;
+      if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > 10000000) { status.textContent = 'Choisis une image JPG, PNG ou WebP de moins de 10 Mo.'; return; }
+      const save = editor.querySelector('[data-tv-save-profile]'); save.disabled = true;
+      let bitmap;
+      try {
+        bitmap = await createImageBitmap(file);
+        const canvas = document.createElement('canvas'); canvas.width = canvas.height = 192;
+        const ctx = canvas.getContext('2d'), side = Math.min(bitmap.width, bitmap.height);
+        ctx.drawImage(bitmap, (bitmap.width-side)/2, (bitmap.height-side)/2, side, side, 0, 0, 192, 192);
+        if (request === photoRequest && editor.open) { draftProfile.photo = canvas.toDataURL('image/webp', .8); refreshEditor(); }
+      } catch (_) { if (request === photoRequest) status.textContent = 'Cette image ne peut pas être lue. Choisis-en une autre.'; }
+      finally { bitmap?.close(); if (request === photoRequest) save.disabled = false; }
+    });
+    editor.querySelector('form').addEventListener('submit', event => {
+      event.preventDefault();
+      const value = sanitizeProfile({...draftProfile, name: editor.querySelector('[data-tv-name]').value});
+      try {
+        setItem(PROFILE, JSON.stringify(value)); profile = value; update(); editor.close();
+      } catch (_) { editor.querySelector('[data-tv-profile-status]').textContent = 'Le navigateur ne peut pas enregistrer le profil. Exporte tes données pour les conserver.'; }
+    });
     update();
+    if (!persistent && tempGet(CHOICE) !== 'temporary') openPanel();
   };
-  window.ToeicVisitor = Object.freeze({get mode() {return persistent ? 'persistent' : 'temporary';}, get id() {return persistent ? preference.id : null;}, open: () => {if (panel) {panel.hidden = false; panel.querySelector('button').focus();}}});
+  window.ToeicVisitor = Object.freeze({get mode() {return persistent ? 'persistent' : 'temporary';}, get id() {return persistent ? preference.id : null;}, sanitizeProfile,
+    open: () => {if (panel) openPanel();}});
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, {once: true}); else mount();
 })();

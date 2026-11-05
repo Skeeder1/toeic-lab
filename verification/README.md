@@ -1,6 +1,6 @@
 # Browser verification
 
-The three scripts start an HTTP server on a disposable local port and use isolated browser storage. They never open a personal profile or load private student backups. Generated reports and screenshots are ignored by Git under `verification/publication/`.
+The scripts start an HTTP server on a disposable local port and use isolated browser storage. They never open a personal profile or load private student backups. Generated reports and screenshots are ignored by Git under `verification/publication/`.
 
 Install Python 3 and Playwright:
 
@@ -22,6 +22,7 @@ python3 verification/verifier_mobile_publication.py
 python3 verification/verifier_session_visiteur.py
 python3 verification/verifier_aide_vocabulaire.py
 python3 verification/verifier_bilan_seance.py
+python3 verification/verifier_interface_epuree.py
 ```
 
 - Mobile: six touch viewports, consent, navigation, lessons, vocabulary, progression, exercises, full expressions, sense button and modal. Checks actual element bounds.
@@ -32,3 +33,5 @@ python3 verification/verifier_bilan_seance.py
 WebKit availability is reported by the mobile script. Chromium touch emulation does not prove Safari compatibility. Optionally install WebKit with `python3 -m playwright install webkit`.
 
 The public application at `https://eliasbellouti.com/demos/toeic/TOEIC_Lab.html` was also checked over HTTPS on November 4, 2026: 66 mobile states, 10 visitor-session checks, 57 complete expressions, JSON export and a full browser close/reopen. Those application checks reported no JavaScript errors; the seven served application files matched the tested repository. Portfolio navigation is verified separately, since its navigation and prefetch behavior belongs to the hosting project.
+
+- Simplified interface: avatar menu, local name/photo, storage consent, concise corrections, on-demand translation, pause/resume, full close/reopen and real JSON export/import. The profile suite also accepts `TOEIC_TEST_URL` and `TOEIC_TEST_OUT` for a disposable-profile HTTPS run.

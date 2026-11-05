@@ -76,7 +76,7 @@ def run():
             small=page.get_by_role('tooltip',name='Traduction de '+term,exact=True)
             assert small.is_visible() and small.locator('button,b').count()==0
             assert small.bounding_box()['height']<60 and small.bounding_box()['width']<240
-            page.screenshot(path=str(ROOT/'publication'/f'bulle-simple-{term}.png'))
+            page.screenshot(path=str(ROOT/f'bulle-simple-{term}.png'))
         checks.append('Un seul sens : petite bulle de traduction sans titre répété et sans case 1')
         page.locator('.v7-question-title [data-tl-term="completed"]').click()
         assert page.get_by_role('dialog',name='Sens de completed',exact=True).is_visible()
@@ -105,7 +105,7 @@ def run():
         cb,bb=card.bounding_box(),badge.bounding_box()
         assert 8<=cb['x']+cb['width']-bb['x']-bb['width']<=18
         assert 8<=cb['y']+cb['height']-bb['y']-bb['height']<=18
-        page.screenshot(path=str(ROOT/'publication/bulle-vocabulaire-compacte.png'))
+        page.screenshot(path=str(ROOT/'bulle-vocabulaire-compacte.png'))
         badge.click();modal=page.get_by_role('dialog',name='Sens de take off',exact=True)
         assert modal.is_visible() and modal.locator('.tl-senses article').count()>=7
         assert page.evaluate('JSON.stringify(v6Session.answers)')==answers
@@ -130,26 +130,25 @@ def run():
         page.locator('.v7-question-title [data-tl-term]').first.press('Enter')
         assert page.locator('dialog [data-tl-save]').is_visible()
         page.locator('dialog [data-tl-close]').click()
-        page.locator('[data-tl-question]').click()
-        page.locator('dialog [data-tl-pick]').filter(has_text='hand in').click()
+        page.locator('.v7-answer-text [data-tl-term="hand in"]').click()
         assert page.get_by_role('dialog',name='Sens de hand in').is_visible()
         page.locator('dialog [data-tl-close]').click()
         ctx.close();ctx,page=launch()
         persisted=page.evaluate('window.__toeicVocabBridge.list().find(x=>x.term==="take off")')
         assert persisted['senses']==saved['senses']
         assert page.evaluate('Object.keys(v6Session.answers).length')==0
-        page.locator('[data-tl-question]').click();page.locator('dialog [data-tl-pick]').filter(has_text='take off').click()
+        page.locator('.v7-answer-text [data-tl-term="take off"]').click()
         page.set_viewport_size({'width':390,'height':844})
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
-        assert page.locator('dialog').bounding_box()['width']<=390
-        page.screenshot(path=str(ROOT/'publication/aide-vocabulaire-mobile.png'))
-        page.set_viewport_size({'width':1440,'height':1000});page.screenshot(path=str(ROOT/'publication/aide-vocabulaire-desktop.png'))
+        assert page.locator('dialog.tl-dialog[open]').bounding_box()['width']<=390
+        page.screenshot(path=str(ROOT/'aide-vocabulaire-mobile.png'))
+        page.set_viewport_size({'width':1440,'height':1000});page.screenshot(path=str(ROOT/'aide-vocabulaire-desktop.png'))
         page.locator('dialog [data-tl-close]').click()
         page.set_viewport_size({'width':390,'height':844})
         page.locator('.v7-answer-text [data-tl-term="take off"]').click()
         mobile_card=page.locator('dialog.tl-dialog').bounding_box()
         assert mobile_card['x']>=0 and mobile_card['x']+mobile_card['width']<=390
-        page.screenshot(path=str(ROOT/'publication/bulle-vocabulaire-mobile.png'))
+        page.screenshot(path=str(ROOT/'bulle-vocabulaire-mobile.png'))
         page.locator('dialog [data-tl-close]').click()
         page.set_viewport_size({'width':1440,'height':1000})
         page.locator('[data-v7-answer="0"] .v7-letter').click()
@@ -164,7 +163,10 @@ def run():
         assert page.evaluate('JSON.stringify(v6Session.answers)')==recorded
         assert page.evaluate('JSON.stringify(Object.entries(localStorage).sort())')==after_lookup
         checks.append('Reprise après fermeture, affichage mobile et sélection de réponse par sa lettre vérifiés')
-        page.locator('#v7Next').click();page.locator('[data-v20-nav="progress"]').first.click()
+        page.locator('#v7Next').click()
+        page.locator('#tvSettings').click()
+        page.locator('[data-tv-profile-action="progress"]').click()
+        page.locator('.v20-fold:has([data-v18-backup]) > summary').click()
         with page.expect_download() as download:page.locator('[data-v18-backup]').click()
         dest=Path(tmp)/'backup.json';download.value.save_as(dest);backup=json.loads(dest.read_text())
         assert any(w['term']=='take off' and len(w['senses'])>=7 for w in backup['v10Vocabulary'])
@@ -173,7 +175,7 @@ def run():
         ctx.close()
     server.shutdown()
     report={'checks':checks,'coverage':coverage,'javascript_errors':errors}
-    (ROOT/'publication/resultats-aide-vocabulaire.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+    (ROOT/'resultats-aide-vocabulaire.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps(report,ensure_ascii=False,indent=2));assert not errors,errors
 
 if __name__=='__main__':run()

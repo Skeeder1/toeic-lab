@@ -4,3 +4,5 @@ __pycache__/
 sauvegardes/
 *sauvegarde*.json
 node_modules/
+
+verification/publication/

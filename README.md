@@ -12,13 +12,17 @@ Avec Python 3, lancer `python3 -m http.server 8765 --bind 127.0.0.1` dans ce dos
 
 Survoler un mot affiche une petite bulle de traduction. Cliquer ou toucher un mot, dans la phrase **ou dans un choix**, ouvre sa fiche avec **Ajouter à Mes mots**, sans sélectionner la réponse. Une expression comme **take off** reste reconnue en entier, avec le sens suggéré par la phrase et cette proposition à la place du trou. Une case numérotée apparaît uniquement lorsqu’il existe plusieurs sens et ouvre leur liste : 57 expressions, 140 sens, exemples et sources. Un mot avec un seul sens ne porte pas de case « 1 ». Le contexte anglais seul sert à suggérer un sens ; une ambiguïté reste signalée.
 
+L’exercice garde une seule commande **Traduire la phrase**. La correction présente la bonne réponse, une explication et un accès au cours, sans traduction automatique répétée ni encadrés imbriqués. Les indications de survol, les boutons de traduction des choix et les badges techniques ont été retirés.
+
 Le bilan présente d’abord la note et son enregistrement, puis les erreurs à revoir. Les bonnes réponses et les notions travaillées se déplient à la demande. Une estimation de parcours n’est affichée que si ses compteurs ont réellement évolué ; elle ne représente pas des points TOEIC.
 
 ## Progression et confidentialité
 
-Le panneau **Mémoriser sur cet appareil** propose de garder la séance, les réponses et les mots dans le stockage local du navigateur, avec un identifiant aléatoire local. Il n'utilise aucun cookie ni compte et n'envoie pas les réponses au serveur. En mode temporaire, les nouvelles réponses sont perdues au rechargement ou à la fermeture de la page ; les anciennes sauvegardes restent intactes.
+L’avatar dans l’en-tête ouvre **Ma progression**, **Mes mots**, **Modifier mon profil** et **Mes données**. Le nom, la couleur et une photo facultative restent locaux et suivent l’export/import JSON. Naviguer vers la progression pendant un exercice met la séance en pause pour la reprendre ensuite.
 
-La mémorisation dépend du domaine, de l'appareil et du profil du navigateur. Utiliser l'export JSON de **Progression** pour une copie de sécurité ou pour transférer les données depuis localhost vers la démonstration publique. La restauration remplace les données locales ; elle ne les fusionne pas.
+Le panneau **Garder ma progression** propose de garder la séance, les réponses et les mots dans le stockage local du navigateur, avec un identifiant aléatoire local. Il n'utilise aucun cookie ni compte et n'envoie pas les réponses au serveur. En mode temporaire, les nouvelles réponses sont perdues au rechargement ou à la fermeture de la page ; les anciennes sauvegardes restent intactes.
+
+La mémorisation dépend du domaine, de l'appareil et du profil du navigateur. Utiliser l’export JSON dans **Profil → Mes données** ou **Progression → Sauvegardes et transferts** pour une copie de sécurité ou pour transférer les données depuis localhost vers la démonstration publique. La restauration remplace les données locales ; elle ne les fusionne pas.
 
 Cette édition publique ne contient pas les résultats personnels intégrés à l'édition locale ni les sauvegardes privées. L'hébergement du portfolio reste soumis à sa propre infrastructure et à ses journaux d'accès.
 

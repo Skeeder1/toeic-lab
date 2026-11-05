@@ -329,6 +329,20 @@ body{background:#f5f7fb}
 .v9-fix{margin-top:12px;border-radius:12px;background:#fffbf1;border:1px solid #f3dfac;padding:12px 14px;font-size:12px;color:#765a2b;line-height:1.6}
 .v9-fix b{color:#85571b}
 .v9-fix button{margin-top:9px;background:#fff;border:1px solid #e9d3a5;border-radius:9px;padding:7px 11px;color:#795526;font-weight:800;cursor:pointer}
+/* A quiet correction: one answer, one explanation, one course link. */
+.v7-correction.v25-correction{background:transparent;border:0;border-left:3px solid #259b79;border-radius:0;margin:24px 0;padding:0 0 2px 16px}
+.v7-correction.v25-correction.is-bad{background:transparent;border-color:#d28b62}
+.v25-correction>header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.v25-correction>header strong{color:#137d66;font-size:13px;font-weight:750}
+.v25-correction.is-bad>header strong{color:#a75c36}
+.v25-correction #v7OpenFiche{background:transparent;border:0;border-radius:6px;padding:7px 0;min-height:44px;color:#6562ba;font-size:12px;font-weight:650;text-align:right}
+.v25-correction #v7OpenFiche:hover{text-decoration:underline}
+.v25-correction .v25-answer{margin:0 0 5px;color:#1c2941;font-size:20px;line-height:1.4;font-weight:800}
+.v25-correction .v25-explanation{margin:0;color:#52627a;font-size:14px;line-height:1.65;max-width:66ch}
+.v8-context-footer{display:none}
+#v6App>.v7-foot,body:has(#v6App) .footer{display:none}
+.v8-context-footer .v8-soft-button{background:transparent!important;border-color:transparent!important;color:#748198!important;font-weight:600!important}
+@media(max-width:480px){.v7-correction.v25-correction{padding-left:12px;margin:20px 0}.v25-correction .v25-answer{font-size:19px}.v25-correction .v25-explanation{font-size:13px}}
 .v9-sheet{width:min(700px,95vw);max-height:88vh;overflow:auto;background:#fff;border-radius:20px;padding:24px;box-shadow:0 30px 90px #0b183d35;position:relative}
 .v9-sheet h2{font-size:24px;color:#1d2c49;margin:10px 0}
 .v9-sheet p{color:#65748b;margin:0 0 15px;line-height:1.6}
@@ -1022,7 +1036,7 @@ function v7Lessons(){const groups=v7TopicList(v7State.section),rank=groups.slice
 function v7Insights(){const topics=v7TopicList(v7State.section),withData=topics.filter(x=>x.n>0);if(!withData.length)return '';let low=withData.slice().sort((a,b)=>a.score-b.score).slice(0,4);return `<section class="v7-insights"><div class="v7-panel-heading"><div><div class="v7-label">03 · PROGRESSER</div><h2>À consolider</h2></div><button data-v7-go="progress">Voir mon évolution →</button></div><div class="v7-insight-list">${low.map(x=>`<div><span>${v7Esc(x.label)}</span><div class="v7-progress-track"><i style="width:${x.score}%"></i></div><b>${x.score}%</b></div>`).join('')}</div></section>`}
 function v7Workspace(){return v7Hero()+v7ModeForm()+v7Lessons()+v7Insights()}
 function v7QuestionCard(){const s=v6Session,q=s.items[s.index],choice=s.answers[q.key],answered=choice!==undefined,show=answered&&s.feedback==='learn',level=q.source==='toeic'?'TOEIC':'Simple',total=s.count===null?'∞':s.count;const end=s.count!==null&&s.index+1>=s.count;
- const fr=v7Esc(q.fr||'');return `<div class="v7-question"><div class="v7-quiz-top"><span>${V7_SECTIONS[s.section||'all'].title} <i>·</i> ${level}</span><button id="v7Quit">Terminer la séance</button></div><div class="v7-quiz-step"><b>Question ${s.index+1} <span>/ ${total}</span></b><span>${s.mode==='auto'?'✦ Auto':'☷ Personnalisé'}</span></div><div class="v7-progress-track v7-quiz-bar"><i style="width:${s.count===null?Math.min(100,(s.index+1)*2):(s.index+1)/s.count*100}%"></i></div><div class="v7-question-paper"><div class="v7-question-title">${v5WordHtml(q.text)}</div><div class="v7-translation-actions"><button id="v7Translate">${v6ShowTranslation?'Masquer la traduction':'◎ Traduire la phrase'}</button><button id="v7TranslateChoices">${v6ShowChoices?'Masquer les choix':'Traduire les choix'}</button></div>${v6ShowTranslation?v6TranslateBlock(q,answered):''}<div class="v7-answers">${q.options.map((op,i)=>`<button data-v7-answer="${i}" ${answered?'disabled':''} class="${show&&i===q.correct?'correct':show&&i===choice&&choice!==q.correct?'wrong':answered&&i===choice?'chosen':''}"><span class="v7-letter">${'ABCD'[i]}</span><span class="v7-answer-text">${v5WordHtml(op,false)}${v6ShowChoices?`<small>${v7Esc(v5Meaning(op))}</small>`:''}</span></button>`).join('')}</div>${show?`<div class="v7-correction ${choice===q.correct?'is-good':'is-bad'}"><div><strong>${choice===q.correct?'✓ Bonne réponse':'✕ À retravailler'}</strong><span>${v7Esc(v5TLabel(q.group))}</span></div><p><b>${v7Esc(q.options[q.correct])}</b> — ${v7Esc(q.why)}</p><small>${fr}</small><button id="v7OpenFiche">Voir la fiche de cours ↗</button></div>`:''}<div class="v7-next"><span>${answered?'Réponse mémorisée ✓':s.feedback==='exam'?'La correction apparaîtra dans le bilan':'Choisis une réponse pour continuer'}</span><button id="v7Next" ${answered?'':'disabled'}>${end?'Voir mon bilan':'Question suivante →'}</button></div></div></div>`}
+ return `<div class="v7-question"><div class="v7-quiz-top"><span>${V7_SECTIONS[s.section||'all'].title} <i>·</i> ${level}</span><button id="v7Quit">Terminer la séance</button></div><div class="v7-quiz-step"><b>Question ${s.index+1} <span>/ ${total}</span></b><span>${s.mode==='auto'?'✦ Auto':'☷ Personnalisé'}</span></div><div class="v7-progress-track v7-quiz-bar"><i style="width:${s.count===null?Math.min(100,(s.index+1)*2):(s.index+1)/s.count*100}%"></i></div><div class="v7-question-paper"><div class="v7-question-title">${v5WordHtml(q.text)}</div><div class="v7-translation-actions"><button id="v7Translate">${v6ShowTranslation?'Masquer la traduction':'◎ Traduire la phrase'}</button></div>${v6ShowTranslation?v6TranslateBlock(q,answered):''}<div class="v7-answers">${q.options.map((op,i)=>`<button data-v7-answer="${i}" ${answered?'disabled':''} class="${show&&i===q.correct?'correct':show&&i===choice&&choice!==q.correct?'wrong':answered&&i===choice?'chosen':''}"><span class="v7-letter">${'ABCD'[i]}</span><span class="v7-answer-text">${v5WordHtml(op,false)}</span></button>`).join('')}</div>${show?`<section class="v7-correction v25-correction ${choice===q.correct?'is-good':'is-bad'}" aria-label="Correction"><header><strong>${choice===q.correct?'✓ Bonne réponse':'À revoir'}</strong><button id="v7OpenFiche">Revoir la règle ↗</button></header><p class="v25-answer">${v7Esc(q.options[q.correct])}</p><p class="v25-explanation">${v7Esc(q.why)}</p></section>`:''}<div class="v7-next"><span>${answered?'Réponse mémorisée ✓':s.feedback==='exam'?'La correction apparaîtra dans le bilan':'Choisis une réponse pour continuer'}</span><button id="v7Next" ${answered?'':'disabled'}>${end?'Voir mon bilan':'Question suivante →'}</button></div></div></div>`}
 function v7Results(){
  const d=v6ResultCache||{done:[],good:[],r:null},records=new Map((d.r?.questions||[]).map(q=>[q.id,q]));
  const correct=q=>records.get(q.key)?.chosen===q.correct,bad=d.done.filter(q=>!correct(q)),good=d.done.filter(correct);
@@ -1042,7 +1056,7 @@ v6Render=function(){const root=document.getElementById('v6App');if(!root)return;
  root.querySelectorAll('[data-v7-fiche]').forEach(b=>b.onclick=()=>v5OpenFiche(b.dataset.v7Fiche));
  if(v7View==='workspace'&&!v6Session){const cfg=v7Cfg();root.querySelectorAll('[data-v7-mode]').forEach(b=>b.onclick=()=>{cfg.mode=b.dataset.v7Mode;if(cfg.mode==='custom'&&!cfg.topics.length)cfg.topics=v7Groups(v7State.section);v7Save();v6Render()});root.querySelectorAll('[data-v7-level]').forEach(b=>b.onclick=()=>{cfg.level=b.dataset.v7Level;v7Save();v6Render()});root.querySelector('#v7Length').onchange=e=>{cfg.length=e.target.value;v7Save()};root.querySelector('#v7Feedback').onchange=e=>{cfg.feedback=e.target.value;v7Save()};root.querySelector('#v7Start').onclick=v6Start;
   root.querySelector('#v7ToggleLessons').onclick=()=>{v7OverviewExpanded=!v7OverviewExpanded;v6Render()};const det=root.querySelector('#v7Topics');if(det){det.ontoggle=e=>v7Expanded=e.target.open;root.querySelectorAll('[data-v7-topic]').forEach(b=>b.onchange=e=>{cfg.topics=e.target.checked?[...new Set([...cfg.topics,e.target.dataset.v7Topic])]:cfg.topics.filter(x=>x!==e.target.dataset.v7Topic);v7Save();det.querySelector('summary span').textContent=cfg.topics.length+' sélectionnées'});root.querySelectorAll('[data-v7-select]').forEach(b=>b.onclick=()=>{cfg.topics=b.dataset.v7Select==='all'?v7Groups(v7State.section):b.dataset.v7Select==='weak'?v7TopicList(v7State.section).filter(x=>x.n>0&&x.score<75).map(x=>x.id):[];v7Expanded=true;v7Save();v6Render()})}}
- if(v6Session&&v7View==='workspace'){const s=v6Session,q=s.items[s.index];root.querySelectorAll('[data-v7-answer]').forEach(b=>b.onclick=()=>v6Answer(Number(b.dataset.v7Answer)));root.querySelector('#v7Next').onclick=v6Advance;root.querySelector('#v7Quit').onclick=()=>{if(confirm('Terminer la séance maintenant et enregistrer les réponses déjà données ?'))v6Finish()};root.querySelector('#v7Translate').onclick=()=>{v6ShowTranslation=!v6ShowTranslation;v6Render()};root.querySelector('#v7TranslateChoices').onclick=()=>{v6ShowChoices=!v6ShowChoices;v6Render()};const f=root.querySelector('#v7OpenFiche');if(f)f.onclick=()=>v5OpenFiche(q.group);root.querySelectorAll('.v5-word').forEach(el=>{el.onclick=()=>el.classList.toggle('show');el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.classList.toggle('show')}}})}
+ if(v6Session&&v7View==='workspace'){const s=v6Session,q=s.items[s.index];root.querySelectorAll('[data-v7-answer]').forEach(b=>b.onclick=()=>v6Answer(Number(b.dataset.v7Answer)));root.querySelector('#v7Next').onclick=v6Advance;root.querySelector('#v7Quit').onclick=()=>{if(confirm('Terminer la séance maintenant et enregistrer les réponses déjà données ?'))v6Finish()};root.querySelector('#v7Translate').onclick=()=>{v6ShowTranslation=!v6ShowTranslation;v6Render()};const f=root.querySelector('#v7OpenFiche');if(f)f.onclick=()=>v5OpenFiche(q.group);root.querySelectorAll('.v5-word').forEach(el=>{el.onclick=()=>el.classList.toggle('show');el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.classList.toggle('show')}}})}
  if(v7View==='results'){window.scrollTo(0,0);root.querySelector('[data-v7-again]').onclick=()=>{v7View='workspace';v6Render()}}
  if(v7View==='progress'){root.querySelector('#v6Backup').onclick=v7Backup;root.querySelector('#v6Import').onclick=()=>root.querySelector('#v6FileInput').click();root.querySelector('#v6FileInput').onchange=v7Import;root.querySelector('#v6CSV').onclick=v5ExportCSV}
 };
@@ -1143,9 +1157,8 @@ v6Page='practice';v6Render();
  };
  const oldQuestion=v7QuestionCard;
  v7QuestionCard=function(){const s=v6Session,q=s.items[s.index];let str=oldQuestion();
-  str=str.replace(/(<div class="v7-translation-actions">)/,'<div class="v8-help">Survole un mot ou une expression pour voir son sens.</div>$1');
   str=str.replace('class="v7-answer-text">','class="v7-answer-text">');
-  str=str.replace(/(<div class="v7-next">)/,`<div class="v8-context-footer"><span>Un doute sur une règle ?</span><button type="button" class="v8-soft-button" data-v8-catalog="true">▦ Toutes les fiches</button></div>$1`);
+  str=str.replace(/(<div class="v7-next">)/,`<div class="v8-context-footer"><button type="button" class="v8-soft-button" data-v8-catalog="true">▦ Toutes les fiches</button></div>$1`);
   return str;
  };
    // V9.2 : navigation empilée et non destructive entre bibliothèque et fiches.
@@ -1383,8 +1396,6 @@ const oldRender=v6Render;
   if(tierOf(q)===4)html=html.replace(/(<i>·<\/i> )TOEIC/, '$1Expert');
   const nav=`<button id="v9Prev" class="v9-prev" ${s.index===0?'disabled':''} title="Revoir la question précédente sans enregistrer une nouvelle tentative">← Précédente</button>`;
   html=html.replace(/(<div class="v7-next">)/,'$1'+nav);
-  if(show && picked!==q.correct){const focus=focusFor(q,picked);if(focus){const r=RULES[focus];html=html.replace(/(<button id="v7OpenFiche">)/,`<div class="v9-fix"><span class="v9-quick-fix-tip">POURQUOI CE CHOIX EST PIÉGEUX</span><div><b>Tu as choisi « ${v7Esc(q.options[picked])} ».</b> ${v7Esc(wrongReason(q,picked,focus))} <b>La construction correcte est « ${v7Esc(q.options[q.correct])} ».</b></div><button type="button" data-v9-rule="${focus}">◈ Mini-rappel : ${v7Esc(r.title)} ↗</button></div>$1`)}
-  }
   return html;
  };
  const originalAdvance=v6Advance;
@@ -2265,13 +2276,9 @@ const oldRender=v6Render;
 v6Render=function(){oldRender();const s=v6Session;
  if(s?.v14Unique&&v7View==='workspace'){
   const q=s.items[s.index];if(q?.key!==activeQuestion.key||s.v18Resumed){activeQuestion={key:q.key,started:Date.now()};s.v14Helped=false;s.v18Resumed=false}
-  const card=document.querySelector('.v7-question-paper');
-  if(card&&!card.querySelector('.v14-qmeta')){
-   card.insertAdjacentHTML('afterbegin',`<div class="v14-qmeta"><span>DIFFICULTÉ ${rank(q)}/4</span><span>Précision visée ≈ 70 %</span><span>Énoncé unique dans cette série</span></div>`)}
   const qstep=document.querySelector('.v7-quiz-step');if(qstep){qstep.title='Questions pré-sélectionnées et verrouillées pour toute la série';
-    // V10 exposed « 3/15 vus dans Present Perfect » in the quiz header, revealing the tense.
-    // Keep this information only AFTER the answer, in the explanation area.
-    const hint=qstep.querySelector('.v10-badge');if(hint){if(s.answers[q.key]===undefined)hint.remove();else hint.textContent='Progression de la notion consultable dans les fiches';}
+    // Per-notion progress belongs in the profile, outside the active exercise.
+    qstep.querySelector('.v10-badge')?.remove();
   }
   // Never disclose the target concept in a pre-answer header or badge.
   const head=document.querySelector('.v7-quiz-top>span');if(head)head.textContent='Exercice · '+(s.mode==='auto'?'Auto':'Personnalisé');
@@ -2837,15 +2844,15 @@ function deletePaused(id){if(!confirm('Supprimer cette séance en pause ? Les r�
  paused=paused.filter(s=>String(s.start)!==String(id));savePaused();v6Render();}
 function exportBackup(){const states={};for(const k of V5_OLD_KEYS)states[k]=v5Read(k,null);
  const payload={format:'toeic-lab-backup',version:19,profileSchema:1,createdAt:new Date().toISOString(),history:v5History,states,v6Events,v6Cfg,v6Session,v7State,
-  v10Vocabulary:v5Read('toeiclab.v10.vocabulary',[]),v10NewQuestions:v5Read('toeiclab.v10.imported-questions',[]),v10Seen:v5Read('toeiclab.v10.seen',[]),v11Favorites:v5Read('toeiclab.v11.lesson-favorites',[]),v12Curriculum:v5Read('toeiclab.v12.curriculum',null),v14Adaptive:v5Read('toeiclab.v14.adaptive',null),v16Flashcards:v5Read('toeiclab.v16.flashcards',null),v18Profile:profile,v18Paused:paused};
+  v10Vocabulary:v5Read('toeiclab.v10.vocabulary',[]),v10NewQuestions:v5Read('toeiclab.v10.imported-questions',[]),v10Seen:v5Read('toeiclab.v10.seen',[]),v11Favorites:v5Read('toeiclab.v11.lesson-favorites',[]),v12Curriculum:v5Read('toeiclab.v12.curriculum',null),v14Adaptive:v5Read('toeiclab.v14.adaptive',null),v16Flashcards:v5Read('toeiclab.v16.flashcards',null),v18Profile:profile,v18Paused:paused,v24UiProfile:v5Read('toeiclab.ui.profile.v1',null)};
  v5Download(JSON.stringify(payload,null,2),'TOEIC-Lab-profil-portable-'+new Date().toISOString().slice(0,10)+'.json','application/json')}
 async function importBackup(file){if(!file)return;if(file.size>30000000)return alert('Fichier trop volumineux.');let obj;
  try{obj=JSON.parse(await file.text())}catch(e){return alert('Fichier JSON illisible.')}if(obj.format!=='toeic-lab-backup')return alert('Ce fichier ne correspond pas à une sauvegarde TOEIC Lab.');
  if(!confirm('Importer cette sauvegarde ? Le navigateur remplacera ses données locales par celles du fichier. Exporte une copie de l’état actuel auparavant.'))return;
- const entries=[['toeiclab.v10.vocabulary',obj.v10Vocabulary],['toeiclab.v10.imported-questions',obj.v10NewQuestions],['toeiclab.v10.seen',obj.v10Seen],['toeiclab.v11.lesson-favorites',obj.v11Favorites],['toeiclab.v12.curriculum',obj.v12Curriculum],['toeiclab.v14.adaptive',obj.v14Adaptive],['toeiclab.v16.flashcards',obj.v16Flashcards],['toeiclab.profile.v1',obj.v18Profile],['toeiclab.sessions.paused.v1',obj.v18Paused],['toeiclab.v6.answers',obj.v6Events],['toeiclab.v6.config',obj.v6Cfg],['toeiclab.v6.draft',obj.v6Session],['toeiclab.v7.workspaces',obj.v7State]];
+ const entries=[['toeiclab.ui.profile.v1',obj.v24UiProfile===undefined?undefined:window.ToeicVisitor?.sanitizeProfile?.(obj.v24UiProfile)],['toeiclab.v10.vocabulary',obj.v10Vocabulary],['toeiclab.v10.imported-questions',obj.v10NewQuestions],['toeiclab.v10.seen',obj.v10Seen],['toeiclab.v11.lesson-favorites',obj.v11Favorites],['toeiclab.v12.curriculum',obj.v12Curriculum],['toeiclab.v14.adaptive',obj.v14Adaptive],['toeiclab.v16.flashcards',obj.v16Flashcards],['toeiclab.profile.v1',obj.v18Profile],['toeiclab.sessions.paused.v1',obj.v18Paused],['toeiclab.v6.answers',obj.v6Events],['toeiclab.v6.config',obj.v6Cfg],['toeiclab.v6.draft',obj.v6Session],['toeiclab.v7.workspaces',obj.v7State]];
  for(const [key,val] of entries)if(val!==undefined&&val!==null)v5Write(key,val);
  if(!obj.v18Profile)v5Write(PROFILE_KEY,null); // Rebuild the V18 observation ledger from imported V16/V17 answer events.
- for(const [key,val] of Object.entries(obj.states||{}))if(val!==undefined&&val!==null)v5Write(key,val);
+ for(const [key,val] of Object.entries(obj.states||{}))if(key!=='toeiclab.ui.profile.v1'&&val!==undefined&&val!==null)v5Write(key,val);
  // Legacy history key is the only supported cross-version source of old archived sessions.
  if(obj.history&&Array.isArray(obj.history))v5Write('toeiclab.history.v5',obj.history);
  alert('Import terminé. Le site va se recharger pour réinitialiser les modèles en mémoire.');location.reload();
@@ -2887,7 +2894,7 @@ v6Render=function(){olderRender();const root=document.getElementById('v6App');if
 };
 // Preserve current backup button behavior across every page.
 v7Backup=exportBackup;
-window.__toeicV18={mastery:(g)=>mastery(g),selectPreview:(section='toeic',n=20)=>selectSession(section,{mode:'auto',level:section==='toeic'?'toeic':'adaptive',length:String(n)},n),getProfile:()=>JSON.parse(JSON.stringify(profile)),paused:()=>paused.length,exportBackup};
+window.__toeicV18={mastery:(g)=>mastery(g),selectPreview:(section='toeic',n=20)=>selectSession(section,{mode:'auto',level:section==='toeic'?'toeic':'adaptive',length:String(n)},n),getProfile:()=>JSON.parse(JSON.stringify(profile)),paused:()=>paused.length,exportBackup,importBackup};
 saveProfile();v6Render();
 })();
 
@@ -2989,8 +2996,9 @@ function goto(dest){
  if(dest==='progress'){home=false;v7View='progress';v6Render();window.scrollTo(0,0);return}
  if(dest==='workspace'){home=false;v7View='workspace';v6Render();window.scrollTo(0,0);return}
 }
+window.ToeicNavigation=Object.freeze({go:goto});
 function gotoSection(id){if(v6Session){alert('Mets ta séance en pause pour changer de parcours.');return}if(!V7_SECTIONS[id])return;home=false;v7State.section=id;v7View='workspace';v7Save();v6Render();window.scrollTo(0,0)}
-function header(){const active=home?'home':v7View==='vocab'?'vocab':v7View==='progress'?'progress':'workspace';return `<button class="v20-logo" data-v20-nav="home" aria-label="Retour à l’accueil"><span class="v20-logo-mark">T.</span><span>TOEIC <i>Lab</i></span></button><nav class="v20-nav" aria-label="Navigation principale"><button data-v20-nav="home" class="${active==='home'?'active':''}" ${active==='home'?'aria-current="page"':''}>Accueil</button><button data-v20-nav="courses">Fiches</button><button data-v20-nav="vocab" class="${active==='vocab'?'active':''}" ${active==='vocab'?'aria-current="page"':''}>Mes mots</button><button data-v20-nav="progress" class="${active==='progress'?'active':''}" ${active==='progress'?'aria-current="page"':''}>Progression</button></nav><span class="v20-account">Données sur cet appareil</span>`}
+function header(){const active=home?'home':v7View==='vocab'?'vocab':v7View==='progress'?'progress':'workspace';return `<button class="v20-logo" data-v20-nav="home" aria-label="Retour à l’accueil"><span class="v20-logo-mark">T.</span><span>TOEIC <i>Lab</i></span></button><nav class="v20-nav" aria-label="Navigation principale"><button data-v20-nav="home" class="${active==='home'?'active':''}" ${active==='home'?'aria-current="page"':''}>Accueil</button><button data-v20-nav="courses">Fiches</button><button data-v20-nav="vocab" class="${active==='vocab'?'active':''}" ${active==='vocab'?'aria-current="page"':''}>Mes mots</button></nav><span data-tv-profile-slot></span>`}
 function fold(target,title,description,key,makeOpen=false){if(!target||target.closest('.v20-fold'))return;const parent=target.parentNode;const detail=document.createElement('details');detail.className='v20-fold';detail.open=Boolean(foldOpen[key]||makeOpen);detail.innerHTML=`<summary><span>${esc(title)}</span><small class="v20-folddesc">${esc(description)}</small></summary>`;parent.insertBefore(detail,target);detail.appendChild(target);detail.addEventListener('toggle',()=>{foldOpen[key]=detail.open});}
 function contextPage(root){const main=root.querySelector('.v7-main');if(!main)return;const section=V7_SECTIONS[v7State.section]||V7_SECTIONS.toeic;
  let title=section.title,description=section.desc;if(section.title==='TOEIC ciblé')description='Exercices de type TOEIC Part 5, sélectionnés selon tes lacunes. Les niveaux s’ajustent entre les séries.';
@@ -3017,7 +3025,7 @@ function enhanceProgress(main){
   const backup=account.querySelector('[data-v18-backup]');if(backup)backup.textContent='↓ Exporter mes données';
   const importButton=account.querySelector('[data-v18-open-import]');if(importButton)importButton.textContent='↑ Importer une sauvegarde';
   const external=account.querySelector('[data-v18-open-external]');if(external){external.textContent='Importer un bilan TOEIC analysé';const controls=account.querySelector('.v18-file-controls'),details=document.createElement('details');details.className='v20-inner-more';details.innerHTML='<summary>Outils avancés</summary>';controls.after(details);details.appendChild(external);const file=account.querySelector('#v18ExternalFile');if(file)details.appendChild(file)}
-  if(p)p.after(account);else progress.prepend(account)
+  progress.append(account);fold(account,'Sauvegardes et transferts','Exporter ou restaurer mes données','progressBackup');
  }
  const stats=progress.querySelector('.v6-stats-cards');if(stats){stats.innerHTML=stats.innerHTML.replace(/réponses en V6/gi,'réponses aux exercices').replace(/réussite en V6/gi,'taux de réussite')}
  const panels=[...progress.querySelectorAll(':scope > .v6-panel')];if(panels[1])fold(panels[1],'Mes points à renforcer','Classement par notion','progressSkills');
