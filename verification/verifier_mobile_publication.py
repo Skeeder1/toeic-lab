@@ -99,7 +99,7 @@ def run():
             expression=page.locator('.v7-answer-text [data-tl-term="take off"]')
             expression.scroll_into_view_if_needed()
             page.wait_for_timeout(250)
-            expression.tap()
+            expression.hover()
             check('bulle', width == 390)
             badge=page.locator('#tlTooltip button')
             assert badge.bounding_box()['width']>=44 and badge.bounding_box()['height']>=44
@@ -108,6 +108,9 @@ def run():
             check('sens', width in [320,390])
             close=page.locator('dialog [data-tl-close]')
             close.tap()
+            expression.tap()
+            assert page.locator('dialog [data-tl-save]').is_visible()
+            page.locator('dialog [data-tl-close]').tap()
             assert page.evaluate('Object.keys(v6Session.answers).length')==0
             page.locator('[data-v7-answer="0"] .v7-letter').tap()
             assert page.evaluate('Object.keys(v6Session.answers).length')==1

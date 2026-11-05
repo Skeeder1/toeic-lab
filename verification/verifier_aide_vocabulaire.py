@@ -60,14 +60,10 @@ def run():
             term=page.evaluate('(n)=>TOEIC_EXPRESSION_ENTRIES.find(e=>e.senses.length===n).term',count)
             page.evaluate('''term=>{const box=document.createElement('div');box.id='tooltip-fixture';box.style.cssText='position:fixed;left:30px;top:220px;z-index:59000;background:white';box.innerHTML=ToeicLexicon.render(term);document.body.append(box)}''',term)
             anchor=page.locator('#tooltip-fixture [data-tl-term]')
-            if count==2:
-                anchor.press('Enter')
-                assert page.locator('#tlTooltip button').evaluate('(e)=>e===document.activeElement')
-            else:
-                anchor.hover()
+            anchor.hover()
             assert page.locator('#tlTooltip .tl-sense-count').inner_text()==str(count)
             assert page.locator('#tlTooltip b').count()==0
-            if count==2: page.locator('#tlTooltip .tl-sense-count').press('Enter')
+            if count==2: anchor.press('Enter')
             else: page.locator('#tlTooltip .tl-sense-count').click()
             assert page.locator('dialog .tl-senses article').count()==count
             page.locator('dialog [data-tl-close]').click()
@@ -82,6 +78,21 @@ def run():
             assert small.bounding_box()['height']<60 and small.bounding_box()['width']<240
             page.screenshot(path=str(ROOT/'publication'/f'bulle-simple-{term}.png'))
         checks.append('Un seul sens : petite bulle de traduction sans titre répété et sans case 1')
+        page.locator('.v7-question-title [data-tl-term="completed"]').click()
+        assert page.get_by_role('dialog',name='Sens de completed',exact=True).is_visible()
+        page.locator('dialog [data-tl-save]').click()
+        assert page.evaluate('window.__toeicVocabBridge.list().some(x=>x.term.toLowerCase()==="completed")')
+        assert page.evaluate('Object.keys(v6Session.answers).length')==0
+        page.locator('dialog [data-tl-close]').click()
+        page.evaluate('''()=>{const q=V6_ALL.find(q=>q.options.some(o=>/^meanwhile$/i.test(o)));if(!q)throw new Error('Meanwhile fixture missing');v6Session={...v6Session,items:[q],answers:{},index:0};v7Save();v6Render()}''')
+        page.locator('.v7-answer-text [data-tl-term]').filter(has_text='Meanwhile').click()
+        assert page.get_by_role('dialog',name='Sens de Meanwhile',exact=True).is_visible()
+        page.locator('dialog [data-tl-save]').click()
+        assert page.evaluate('window.__toeicVocabBridge.list().some(x=>x.term.toLowerCase()==="meanwhile")')
+        assert page.evaluate('Object.keys(v6Session.answers).length')==0
+        page.locator('dialog [data-tl-close]').click()
+        checks.append('Clic dans la phrase et dans un choix à un seul sens : fiche et ajout à Mes mots sans sélectionner la réponse')
+        page.evaluate('''()=>{const q=V6_BYKEY.get('v21:diagnostic:014');v6Session={...v6Session,items:[q],answers:{},index:0};v7Save();v6Render()}''')
         choice=page.locator('.v7-answer-text [data-tl-term="take off"]')
         assert choice.count()==1
         choice.hover();assert page.locator('#tlTooltip').is_visible()
@@ -111,19 +122,14 @@ def run():
         # Existing personal definitions and ids must remain intact when new senses are merged.
         page.evaluate('''()=>{window.__toeicVocabBridge.upsert({term:'get through',meaning:'ma définition conservée',context:'mon exemple',senses:[{id:'mon-id-stable',meaning:'ma définition conservée',context:'mon exemple'}]});ToeicLexicon.refresh()}''')
         page.locator('.v7-answer-text [data-tl-term="get through"]').click()
-        page.locator('#tlTooltip button').click()
         page.locator('dialog [data-tl-save]').click()
         merged=page.evaluate('window.__toeicVocabBridge.list().find(x=>x.term==="get through")')
         assert merged['meaning']=='ma définition conservée' and merged['senses'][0]['id']=='mon-id-stable' and len(merged['senses'])>=7
         page.locator('dialog [data-tl-close]').click()
         checks.append('Ajout de tous les sens aux flashcards ; définitions et identifiants personnels conservés')
         page.locator('.v7-question-title [data-tl-term]').first.press('Enter')
-        # Closing a scrolled modal can emit a delayed scroll event. It must not
-        # dismiss the fresh tooltip anchored to a different part of the page.
-        page.evaluate('''()=>{const closed=document.createElement('dialog');document.body.append(closed);closed.dispatchEvent(new Event('scroll'));closed.remove()}''')
-        assert page.get_by_role('tooltip').is_visible() and page.locator('#tlTooltip button').count()==0
-        page.locator('.v7-question-title [data-tl-term]').first.press('Escape')
-        assert page.locator('#tlTooltip').count()==0
+        assert page.locator('dialog [data-tl-save]').is_visible()
+        page.locator('dialog [data-tl-close]').click()
         page.locator('[data-tl-question]').click()
         page.locator('dialog [data-tl-pick]').filter(has_text='hand in').click()
         assert page.get_by_role('dialog',name='Sens de hand in').is_visible()
@@ -141,18 +147,28 @@ def run():
         page.locator('dialog [data-tl-close]').click()
         page.set_viewport_size({'width':390,'height':844})
         page.locator('.v7-answer-text [data-tl-term="take off"]').click()
-        mobile_card=page.locator('#tlTooltip').bounding_box()
+        mobile_card=page.locator('dialog.tl-dialog').bounding_box()
         assert mobile_card['x']>=0 and mobile_card['x']+mobile_card['width']<=390
         page.screenshot(path=str(ROOT/'publication/bulle-vocabulaire-mobile.png'))
-        page.locator('#tlTooltip button').click();page.locator('dialog [data-tl-close]').click()
+        page.locator('dialog [data-tl-close]').click()
         page.set_viewport_size({'width':1440,'height':1000})
         page.locator('[data-v7-answer="0"] .v7-letter').click()
         assert page.evaluate('Object.keys(v6Session.answers).length')==1
+        recorded=page.evaluate('JSON.stringify(v6Session.answers)')
+        page.locator('.v7-answer-text [data-tl-term="take off"]').click()
+        assert page.locator('dialog [data-tl-save]').is_visible()
+        assert page.evaluate('JSON.stringify(v6Session.answers)')==recorded
+        page.locator('dialog [data-tl-close]').click()
+        after_lookup=page.evaluate('JSON.stringify(Object.entries(localStorage).sort())')
+        page.locator('[data-v7-answer="1"] .v7-letter').click()
+        assert page.evaluate('JSON.stringify(v6Session.answers)')==recorded
+        assert page.evaluate('JSON.stringify(Object.entries(localStorage).sort())')==after_lookup
         checks.append('Reprise après fermeture, affichage mobile et sélection de réponse par sa lettre vérifiés')
         page.locator('#v7Next').click();page.locator('[data-v20-nav="progress"]').first.click()
         with page.expect_download() as download:page.locator('[data-v18-backup]').click()
         dest=Path(tmp)/'backup.json';download.value.save_as(dest);backup=json.loads(dest.read_text())
         assert any(w['term']=='take off' and len(w['senses'])>=7 for w in backup['v10Vocabulary'])
+        assert all(any(w['term'].lower()==term for w in backup['v10Vocabulary']) for term in ['completed','meanwhile'])
         checks.append('Sauvegarde JSON : expression et ensemble de ses sens conservés')
         ctx.close()
     server.shutdown()

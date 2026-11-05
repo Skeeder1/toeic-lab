@@ -127,7 +127,7 @@
     const d=makeDialog('Sens de '+e.term), suggested=contextual(e,info.sentence);
     // Preserve the real gap: filling it with a distractor would invent a faulty example.
     const example=info.sentence;
-    d.innerHTML=`<div class="tl-dialog-body"><header><div><small>COMPRENDRE LE VOCABULAIRE</small><h2>${esc(e.term)}</h2></div><button type="button" data-tl-close aria-label="Fermer l’aide vocabulaire">×</button></header><div class="tl-context">${summary(e,info)}${example?`<p>Phrase de l’exercice : <q>${esc(example)}</q></p>`:''}${info.choice?'<p class="tl-note">Cette aide explique le vocabulaire ; elle ne valide pas ton choix de réponse.</p>':''}${!suggested&&e.senses.length>1?'<p>Le contexte ne permet pas de choisir un sens avec certitude. Compare les emplois ci-dessous.</p>':''}</div><h3>${e.senses.length>1?'Les sens à connaître':'Un emploi à connaître'}</h3><div class="tl-senses">${e.senses.map((s,i)=>`<article ${suggested===s?'class="tl-suggested"':''}><div><span>${i+1}</span><h4>${esc(s.meaning)}</h4>${s.type?`<small>${esc(s.type)}</small>`:''}</div>${s.note?`<p>${esc(s.note)}</p>`:''}${s.context?`<blockquote lang="en">${esc(s.context)}</blockquote>`:''}${s.frenchExample?`<p class="tl-french">${esc(s.frenchExample)}</p>`:''}</article>`).join('')}</div><p class="tl-note">${e.limited?'Définition du lexique existant. Tous les emplois ne sont pas encore détaillés.':'Sens courants du lexique local, sans garantie d’exhaustivité. Le sens suggéré est une aide à confirmer avec la phrase.'}</p>${sourceLinks(e)?`<p class="tl-sources">Dictionnaires : ${sourceLinks(e)}</p>`:''}<footer><p data-tl-status role="status"></p><button type="button" data-tl-save>Ajouter l’expression et ses sens à Mes mots</button></footer></div>`;
+    d.innerHTML=`<div class="tl-dialog-body"><header><div><small>COMPRENDRE LE VOCABULAIRE</small><h2>${esc(e.term)}</h2></div><button type="button" data-tl-close aria-label="Fermer l’aide vocabulaire">×</button></header><div class="tl-context">${summary(e,info)}${example?`<p>Phrase de l’exercice : <q>${esc(example)}</q></p>`:''}${info.choice?'<p class="tl-note">Cette aide explique le vocabulaire ; elle ne valide pas ton choix de réponse.</p>':''}${!suggested&&e.senses.length>1?'<p>Le contexte ne permet pas de choisir un sens avec certitude. Compare les emplois ci-dessous.</p>':''}</div><h3>${e.senses.length>1?'Les sens à connaître':'Un emploi à connaître'}</h3><div class="tl-senses">${e.senses.map((s,i)=>`<article ${suggested===s?'class="tl-suggested"':''}><div>${e.senses.length>1?`<span>${i+1}</span>`:''}<h4>${esc(s.meaning)}</h4>${s.type?`<small>${esc(s.type)}</small>`:''}</div>${s.note?`<p>${esc(s.note)}</p>`:''}${s.context?`<blockquote lang="en">${esc(s.context)}</blockquote>`:''}${s.frenchExample?`<p class="tl-french">${esc(s.frenchExample)}</p>`:''}</article>`).join('')}</div><p class="tl-note">${e.limited?'Définition du lexique existant. Tous les emplois ne sont pas encore détaillés.':'Sens courants du lexique local, sans garantie d’exhaustivité. Le sens suggéré est une aide à confirmer avec la phrase.'}</p>${sourceLinks(e)?`<p class="tl-sources">Dictionnaires : ${sourceLinks(e)}</p>`:''}<footer><p data-tl-status role="status"></p><button type="button" data-tl-save>Ajouter à Mes mots</button></footer></div>`;
     d.querySelector('[data-tl-close]').onclick=()=>d.close();
     d.querySelector('[data-tl-save]').onclick=()=>{
       const bridge=window.__toeicVocabBridge;if(!bridge)return;
@@ -162,16 +162,24 @@
   document.addEventListener('click',e=>{
     const el=e.target.closest?.('[data-tl-term]');if(!el){if(!tooltip?.contains(e.target))removeTooltip();return;}
     e.preventDefault();e.stopImmediatePropagation();
-    showTooltip(el,true);
+    const entry=entryFor(el.dataset.tlTerm,el.dataset.gloss);
+    if(entry)showEntry(entry,infoFor(el));
   },true);
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){removeTooltip();return;}
     const el=e.target.closest?.('[data-tl-term]');
-    if(el&&el.tabIndex===0&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();showTooltip(el,true);tooltip?.querySelector('button')?.focus({preventScroll:true});}
+    if(el&&el.tabIndex===0&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();const entry=entryFor(el.dataset.tlTerm,el.dataset.gloss);if(entry)showEntry(entry,infoFor(el));}
   },true);
 
   const originalRender=v6Render;
-  v6Render=function(){refresh();removeTooltip();originalRender();const actions=document.querySelector('.v7-translation-actions');
+  v6Render=function(){refresh();removeTooltip();originalRender();
+    // Keep answered choices read-only while their vocabulary remains interactive.
+    document.querySelectorAll('.v7-answers > button:disabled').forEach(button=>{
+      const card=document.createElement('div');card.className=button.className+' tl-answered-choice';card.dataset.v7Answer=button.dataset.v7Answer;
+      card.setAttribute('role','group');card.setAttribute('aria-label','Choix '+(button.querySelector('.v7-letter')?.textContent||''));card.innerHTML=button.innerHTML;
+      card.querySelectorAll('[data-tl-term]').forEach(word=>{word.tabIndex=0;word.setAttribute('role','button');});button.replaceWith(card);
+    });
+    const actions=document.querySelector('.v7-translation-actions');
     if(actions&&!actions.querySelector('[data-tl-question]')){
       const b=document.createElement('button');b.type='button';b.dataset.tlQuestion='';b.textContent='Vocabulaire de la question';b.onclick=showQuestionVocabulary;actions.appendChild(b);
     }
