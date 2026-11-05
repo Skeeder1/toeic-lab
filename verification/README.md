@@ -21,11 +21,13 @@ From the repository root:
 python3 verification/verifier_mobile_publication.py
 python3 verification/verifier_session_visiteur.py
 python3 verification/verifier_aide_vocabulaire.py
+python3 verification/verifier_bilan_seance.py
 ```
 
 - Mobile: six touch viewports, consent, navigation, lessons, vocabulary, progression, exercises, full expressions, sense button and modal. Checks actual element bounds.
 - Visitor session: explicit persistence, temporary storage, refresh/browser restart, original data protection, JSON export and storage failures.
 - Vocabulary: whole phrasal verbs, contextual suggestions, all senses, isolated saved words, keyboard controls, mobile modal and export.
+- Session summary: five completed exercises, scores 0/10, 9/10 and 10/10, compact corrections, meaningful curriculum estimates, preserved answers/history, JSON export and browser restart.
 
 WebKit availability is reported by the mobile script. Chromium touch emulation does not prove Safari compatibility. Optionally install WebKit with `python3 -m playwright install webkit`.
 

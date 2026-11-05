@@ -90,8 +90,8 @@
 
   function markHelp(){if(typeof v6Session!=='undefined'&&v6Session&&!v6Session.v14Helped){v6Session.v14Helped=true;v7Save();}}
   function cancelHide(){clearTimeout(hideTimer);}
-  function removeTooltip(){cancelHide();tooltip?.remove();tooltip=null;tooltipAnchor=null;tooltipPinned=false;}
-  function deferHide(){cancelHide();if(!tooltipPinned)hideTimer=setTimeout(removeTooltip,220);}
+  function removeTooltip(){cancelHide();tooltipAnchor?.removeAttribute('aria-describedby');tooltip?.remove();tooltip=null;tooltipAnchor=null;tooltipPinned=false;}
+  function deferHide(){cancelHide();if(!tooltipPinned)hideTimer=setTimeout(removeTooltip,tooltip?.classList.contains('has-senses')?180:0);}
   function infoFor(el){return {sentence:el.dataset.tlSentence||'',choice:el.dataset.tlChoice==='1'};}
   function summary(e,info){const s=contextual(e,info.sentence);return s?`<small>Sens suggéré dans cette phrase</small><strong>${esc(s.meaning)}</strong>`:e.senses.length>1?`<small>${e.senses.length} sens possibles</small><strong>Le sens dépend du contexte</strong>`:`<small>Sens courant</small><strong>${esc(e.senses[0].meaning)}</strong>`;}
   function showTooltip(el,pinned=false){
@@ -102,14 +102,17 @@
     removeTooltip();tooltipAnchor=el;tooltipPinned=pinned;markHelp();
     const info=infoFor(el),suggested=contextual(e,info.sentence);
     const meaning=suggested?.meaning || (e.senses.length===1?e.senses[0].meaning:e.senses.slice(0,3).map(s=>s.meaning).join(' / '));
-    tooltip=document.createElement('div');tooltip.id='tlTooltip';tooltip.className='tl-tooltip';tooltip.setAttribute('role','dialog');tooltip.setAttribute('aria-label','Traduction de '+e.term);
-    tooltip.innerHTML=`<b>${esc(e.term)}</b><p class="tl-context-gloss">${esc(meaning)}</p><button type="button" class="tl-sense-count" aria-label="Voir les ${e.senses.length} sens de ${esc(e.term)}" title="Tous les sens">${e.senses.length}</button>`;
-    tooltip.querySelector('.tl-sense-count').onclick=event=>{event.preventDefault();event.stopPropagation();showEntry(e,info);};
+    const multiple=e.senses.length>1;
+    tooltip=document.createElement('div');tooltip.id='tlTooltip';tooltip.className='tl-tooltip'+(multiple?' has-senses':'');tooltip.setAttribute('role',multiple?'dialog':'tooltip');tooltip.setAttribute('aria-label','Traduction de '+e.term);
+    tooltip.innerHTML=`<p class="tl-context-gloss">${esc(meaning)}</p>${multiple?`<button type="button" class="tl-sense-count" aria-label="Voir les ${e.senses.length} sens de ${esc(e.term)}" title="Tous les sens">${e.senses.length}</button>`:''}`;
+    const count=tooltip.querySelector('.tl-sense-count');
+    if(count)count.onclick=event=>{event.preventDefault();event.stopPropagation();showEntry(e,info);};
+    el.setAttribute('aria-describedby','tlTooltip');
     tooltip.addEventListener('pointerenter',cancelHide);tooltip.addEventListener('pointerleave',deferHide);
     document.body.appendChild(tooltip);
     const r=el.getBoundingClientRect(), w=tooltip.getBoundingClientRect();
     tooltip.style.left=Math.max(12,Math.min(r.left,innerWidth-w.width-12))+'px';
-    tooltip.style.top=(r.bottom+w.height+12<innerHeight?r.bottom+9:Math.max(12,r.top-w.height-9))+'px';
+    tooltip.style.top=(r.top-w.height-7>=8?r.top-w.height-7:Math.min(r.bottom+7,innerHeight-w.height-8))+'px';
   }
 
   function makeDialog(title){

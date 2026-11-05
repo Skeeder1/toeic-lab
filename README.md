@@ -10,7 +10,9 @@ Adaptation d'une application HTML fournie sous forme de ZIP. Les ajouts portent 
 
 Avec Python 3, lancer `python3 -m http.server 8765 --bind 127.0.0.1` dans ce dossier, puis ouvrir <http://127.0.0.1:8765/TOEIC_Lab.html>. Aucun compte, dépendance réseau ou compilation nécessaire.
 
-Cliquer sur une expression comme **take off** affiche le groupe complet et le sens suggéré par la phrase avec cette proposition à la place du trou. Le grand nombre ouvre tous les sens du lexique : 57 expressions, 140 sens, exemples et sources. Le contexte anglais seul sert à suggérer un sens ; une ambiguïté reste signalée.
+Survoler ou toucher un mot affiche une petite bulle de traduction. Une expression comme **take off** reste reconnue en entier, avec le sens suggéré par la phrase et cette proposition à la place du trou. Une case numérotée apparaît uniquement lorsqu’il existe plusieurs sens et ouvre leur liste : 57 expressions, 140 sens, exemples et sources. Un mot avec un seul sens ne porte pas de case « 1 ». Le contexte anglais seul sert à suggérer un sens ; une ambiguïté reste signalée.
+
+Le bilan présente d’abord la note et son enregistrement, puis les erreurs à revoir. Les bonnes réponses et les notions travaillées se déplient à la demande. Une estimation de parcours n’est affichée que si ses compteurs ont réellement évolué ; elle ne représente pas des points TOEIC.
 
 ## Progression et confidentialité
 

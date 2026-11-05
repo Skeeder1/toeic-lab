@@ -56,8 +56,32 @@ def run():
             sense=page.evaluate('(term)=>ToeicLexicon.lookup(term,{sentence:"Please ____ the completed access form to the security office before your first shift."}).suggested',term)
             assert sense and fragment in sense['meaning'],(term,sense)
         checks.append('Sens suggéré selon le contexte ; incertitude affichée lorsque la phrase ne suffit pas')
+        for count in [2,3,4]:
+            term=page.evaluate('(n)=>TOEIC_EXPRESSION_ENTRIES.find(e=>e.senses.length===n).term',count)
+            page.evaluate('''term=>{const box=document.createElement('div');box.id='tooltip-fixture';box.style.cssText='position:fixed;left:30px;top:220px;z-index:59000;background:white';box.innerHTML=ToeicLexicon.render(term);document.body.append(box)}''',term)
+            anchor=page.locator('#tooltip-fixture [data-tl-term]')
+            if count==2:
+                anchor.press('Enter')
+                assert page.locator('#tlTooltip button').evaluate('(e)=>e===document.activeElement')
+            else:
+                anchor.hover()
+            assert page.locator('#tlTooltip .tl-sense-count').inner_text()==str(count)
+            assert page.locator('#tlTooltip b').count()==0
+            if count==2: page.locator('#tlTooltip .tl-sense-count').press('Enter')
+            else: page.locator('#tlTooltip .tl-sense-count').click()
+            assert page.locator('dialog .tl-senses article').count()==count
+            page.locator('dialog [data-tl-close]').click()
+            page.evaluate('document.getElementById("tooltip-fixture").remove()')
+        checks.append('Case numérotée seulement pour plusieurs sens : 2, 3 et 4 ouvrent la liste correspondante')
         page.locator('[data-v20-section="tense"]').first.click();page.locator('#v7Length').select_option('10');page.locator('#v7Start').click()
         page.evaluate('''()=>{const q=V6_BYKEY.get('v21:diagnostic:014');v6Session={...v6Session,section:'toeic',items:[q],count:1,index:0,answers:{},v14Queue:[],v14Unique:true,feedback:'learn'};v7View='workspace';v6Page='practice';v7Save();v6Render()}''')
+        for term in ['completed','to']:
+            page.locator(f'.v7-question-title [data-tl-term="{term}"]').first.hover()
+            small=page.get_by_role('tooltip',name='Traduction de '+term,exact=True)
+            assert small.is_visible() and small.locator('button,b').count()==0
+            assert small.bounding_box()['height']<60 and small.bounding_box()['width']<240
+            page.screenshot(path=str(ROOT/'publication'/f'bulle-simple-{term}.png'))
+        checks.append('Un seul sens : petite bulle de traduction sans titre répété et sans case 1')
         choice=page.locator('.v7-answer-text [data-tl-term="take off"]')
         assert choice.count()==1
         choice.hover();assert page.locator('#tlTooltip').is_visible()
@@ -97,10 +121,9 @@ def run():
         # Closing a scrolled modal can emit a delayed scroll event. It must not
         # dismiss the fresh tooltip anchored to a different part of the page.
         page.evaluate('''()=>{const closed=document.createElement('dialog');document.body.append(closed);closed.dispatchEvent(new Event('scroll'));closed.remove()}''')
-        assert page.locator('#tlTooltip button').evaluate('(e)=>e===document.activeElement')
-        page.locator('#tlTooltip button').press('Enter')
-        assert page.locator('dialog.tl-dialog[open]').count()==1
-        page.locator('dialog [data-tl-close]').click()
+        assert page.get_by_role('tooltip').is_visible() and page.locator('#tlTooltip button').count()==0
+        page.locator('.v7-question-title [data-tl-term]').first.press('Escape')
+        assert page.locator('#tlTooltip').count()==0
         page.locator('[data-tl-question]').click()
         page.locator('dialog [data-tl-pick]').filter(has_text='hand in').click()
         assert page.get_by_role('dialog',name='Sens de hand in').is_visible()
