@@ -33,3 +33,9 @@ Conserver `TOEIC_Lab.html` et les six fichiers JS/CSS du dossier ensemble. `sess
 ## Vérifications
 
 Les vérifications utilisent des profils de navigateur jetables : affichage et interactions tactiles dans six formats, expressions et sens, export, consentement, conservation après fermeture, refus et conflits entre onglets. Chromium/Brave sont vérifiés ; Safari réel n'a pas été validé.
+
+## Variété des questions de Part 5
+
+Le TOEIC Part 5 ciblé donne priorité aux énoncés inédits compatibles avec le parcours, avant les quotas de notions. Les questions déjà affichées sont suivies même sans réponse ; les séances en pause et leurs files restent réservées. Les anciens identifiants sont reconnus. Après épuisement du stock compatible, la rotation reprend les questions vues les plus anciennes. Les variantes très proches des modèles générés passent après les formulations nouvelles.
+
+La banque ciblée comprend 120 nouvelles questions originales. Les métadonnées d’exposition suivent le consentement local et l’export/import JSON, sans modifier les anciennes réponses ni la notation.

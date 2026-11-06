@@ -35,3 +35,9 @@ WebKit availability is reported by the mobile script. Chromium touch emulation d
 The public application at `https://eliasbellouti.com/demos/toeic/TOEIC_Lab.html` was also checked over HTTPS on November 4, 2026: 66 mobile states, 10 visitor-session checks, 57 complete expressions, JSON export and a full browser close/reopen. Those application checks reported no JavaScript errors; the seven served application files matched the tested repository. Portfolio navigation is verified separately, since its navigation and prefetch behavior belongs to the hosting project.
 
 - Simplified interface: avatar menu, local name/photo, storage consent, concise corrections, on-demand translation, pause/resume, full close/reopen and real JSON export/import. The profile suite also accepts `TOEIC_TEST_URL` and `TOEIC_TEST_OUT` for a disposable-profile HTTPS run.
+
+```sh
+python3 verification/verifier_variete_questions.py
+```
+
+- Question rotation: fourteen functional checks, including twenty consecutive real sessions of ten and twenty questions, shown-but-unanswered questions, pause reservations, legacy question IDs, structural variants, bank exhaustion and export/import of exposures.
