@@ -229,7 +229,7 @@ def run():
                 current.goto(url)
                 current.wait_for_selector('#tvSettings')
                 if current.locator('[data-tv-accept]').is_visible():current.locator('[data-tv-accept]').click()
-                current.wait_for_function('typeof ToeicMocks!=="undefined"')
+                current.wait_for_function('() => typeof ToeicMocks!=="undefined"')
                 return persistent,current
 
             persistent,page=persistent_profile()
@@ -243,7 +243,7 @@ def run():
             page.locator('[data-tm-question="7"]').click()
             page.locator('.tm-question-map summary').click()
             # The native details toggle event persists this UI metadata asynchronously.
-            page.wait_for_function('v6Session.toeicMock.mapOpen === document.querySelector(".tm-question-map").open')
+            page.wait_for_function('() => v6Session.toeicMock.mapOpen === document.querySelector(".tm-question-map").open')
             draft=page.evaluate('JSON.parse(JSON.stringify(v6Session))')
             exposure=page.evaluate("localStorage.getItem('toeiclab.questions.exposure.v1')")
             original_events=page.evaluate('JSON.stringify(v6Events)')
