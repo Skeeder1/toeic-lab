@@ -28,7 +28,7 @@ Cette édition publique ne contient pas les résultats personnels intégrés à 
 
 ## Fichiers
 
-Conserver `TOEIC_Lab.html` et les six fichiers JS/CSS du dossier ensemble. `session-visiteur.js` doit être chargé avant tout script d'application. `mobile.css` est chargé à la fin pour compléter les styles intégrés.
+Conserver `TOEIC_Lab.html` et les neuf fichiers JS/CSS du dossier ensemble. `session-visiteur.js` doit être chargé avant tout script d'application. `mobile.css` est chargé à la fin pour compléter les styles intégrés.
 
 ## Vérifications
 
@@ -39,3 +39,23 @@ Les vérifications utilisent des profils de navigateur jetables : affichage et i
 Le TOEIC Part 5 ciblé donne priorité aux énoncés inédits compatibles avec le parcours, avant les quotas de notions. Les questions déjà affichées sont suivies même sans réponse ; les séances en pause et leurs files restent réservées. Les anciens identifiants sont reconnus. Après épuisement du stock compatible, la rotation reprend les questions vues les plus anciennes. Les variantes très proches des modèles générés passent après les formulations nouvelles.
 
 La banque ciblée comprend 120 nouvelles questions originales. Les métadonnées d’exposition suivent le consentement local et l’export/import JSON, sans modifier les anciennes réponses ni la notation.
+
+## TOEIC blanc, Partie 5
+
+L’accueil distingue **TOEIC Part 5 ciblé** et **TOEIC blanc**. La bibliothèque blanche couvre uniquement la **Partie 5**, avec dix tests fixes de trente questions originales chacun, numérotées 101 à 130. Elle ne simule pas les sept parties du TOEIC Listening and Reading et ne produit pas de conversion sur 990.
+
+Chaque test permet de passer une question, revenir dessus et modifier ses choix. Les aides et traductions restent désactivées pendant le blanc. Les réponses restent provisoires jusqu’à la confirmation finale ; les questions laissées vides comptent alors fausses. La pause, la reprise et l’export/import conservent l’ordre et les choix. Les énoncés blancs restent séparés du stock ciblé. Refaire volontairement un test conserve son énoncé et son ordre.
+
+La répartition des 300 questions originales suit le classement principal de 300 questions relevées dans dix sujets distincts fournis :
+
+| Type principal | Questions | Part |
+| --- | ---: | ---: |
+| Vocabulaire et collocations | 102 | 34 % |
+| Formes de mots | 65 | 21,7 % |
+| Verbes, temps, voix et accords | 43 | 14,3 % |
+| Prépositions | 30 | 10 % |
+| Conjonctions et liaisons | 29 | 9,7 % |
+| Déterminants, articles et pronoms | 23 | 7,7 % |
+| Relatifs et autres constructions | 8 | 2,7 % |
+
+Cette répartition est observée dans cet échantillon, pas imposée par ETS. Les questions sont originales, relues, et non étalonnées comme un test officiel. Les PDF de référence et les données personnelles restent hors du dépôt public. Le [format officiel décrit par ETS Global](https://www.etsglobal.org/fx/en/help-center/test-content/format-questions-toeic-listening-reading) couvre l’ensemble du test ; cette application entraîne ici la Partie 5.

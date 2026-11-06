@@ -41,3 +41,9 @@ python3 verification/verifier_variete_questions.py
 ```
 
 - Question rotation: fourteen functional checks, including twenty consecutive real sessions of ten and twenty questions, shown-but-unanswered questions, pause reservations, legacy question IDs, structural variants, bank exhaustion and export/import of exposures.
+
+```sh
+python3 verification/verifier_blancs_part5.py
+```
+
+- Fixed Part 5 tests: ten real banks, 300 distinct questions and observed type proportions; editable tentative answers, skip/review, submission only after confirmation, 0/30 and 30/30, pause/resume, four viewports. Ten completed papers create exactly 300 events and observations. Full browser close/reopen and a real export/import preserve unfinished answers and question order. All profiles are disposable; no personal data is loaded.

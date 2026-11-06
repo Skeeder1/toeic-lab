@@ -11,6 +11,8 @@
 - Bilan avec note et enregistrement en tête, erreurs à revoir en priorité, bonnes réponses et détail des notions repliés ; aucune fausse variation « +0 pt » pour le TOEIC ciblé.
 - Rotation des questions du TOEIC Part 5 ciblé : inédits avant quotas, suivi des énoncés affichés, réservations des pauses, alias des anciens historiques et rotation des plus anciens après épuisement. Variantes proches des modèles générés regroupées en priorité douce.
 - 120 questions originales supplémentaires pour les notions moins fournies du ciblé.
+- Bibliothèque TOEIC blanc limitée à la Partie 5 : dix tests fixes, 300 énoncés originaux séparés du ciblé, proportions de types fondées sur dix sujets analysés.
+- Blancs : choix provisoires modifiables, saut/relecture, confirmation avant notation, non-réponses comptées fausses, pause/reprise et sauvegarde de la séance. Résultat sur 30, sans score TOEIC complet.
 - Édition publique sans les observations et réponses personnelles de l'édition locale.
 
 Les vérifications reproductibles sont décrites dans [verification/README.md](verification/README.md). La mémorisation ne synchronise pas plusieurs appareils ; un navigateur privé ou l'effacement des données peut supprimer la progression locale.
