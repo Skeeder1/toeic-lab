@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent
 APP = Path(os.environ.get('TOEIC_APP_DIR', ROOT.parent))
-OUT = Path(os.environ.get('TOEIC_TEST_OUT', ROOT / 'publication' / 'blancs'))
+OUT = Path(os.environ.get('TOEIC_TEST_OUT', ROOT / 'blancs' / 'reel'))
 OUT.mkdir(parents=True, exist_ok=True)
 
 
@@ -257,7 +257,7 @@ def run():
             page.locator('.tm-exam').wait_for()
             reopened=page.evaluate('JSON.parse(JSON.stringify(v6Session))')
             for field in session_fields:assert reopened[field]==draft[field],{'field':field,'expected':draft[field],'actual':reopened[field]}
-            assert page.locator('.tm-step strong').inner_text().startswith('Question 108')
+            assert page.locator('.tm-step strong').inner_text().startswith('Question 8')
             assert page.locator('.tm-question-map').evaluate('e=>e.open')==draft['toeicMock']['mapOpen']
             assert page.evaluate('JSON.stringify(v6Events)')==original_events
             assert page.evaluate('JSON.stringify(__toeicV18.getProfile().observations)')==original_observations

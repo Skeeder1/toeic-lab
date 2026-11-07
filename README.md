@@ -10,7 +10,7 @@ Adaptation d'une application HTML fournie sous forme de ZIP. Les ajouts portent 
 
 Avec Python 3, lancer `python3 -m http.server 8765 --bind 127.0.0.1` dans ce dossier, puis ouvrir <http://127.0.0.1:8765/TOEIC_Lab.html>. Aucun compte, dépendance réseau ou compilation nécessaire.
 
-Survoler un mot affiche une petite bulle de traduction. Cliquer ou toucher un mot, dans la phrase **ou dans un choix**, ouvre sa fiche avec **Ajouter à Mes mots**, sans sélectionner la réponse. Une expression comme **take off** reste reconnue en entier, avec le sens suggéré par la phrase et cette proposition à la place du trou. Une case numérotée apparaît uniquement lorsqu’il existe plusieurs sens et ouvre leur liste : 57 expressions, 140 sens, exemples et sources. Un mot avec un seul sens ne porte pas de case « 1 ». Le contexte anglais seul sert à suggérer un sens ; une ambiguïté reste signalée.
+Survoler un mot affiche une petite bulle de traduction. Cliquer ou toucher un mot, dans la phrase **ou dans un choix**, ouvre sa fiche avec **Ajouter à Mes mots**, sans sélectionner la réponse. Une expression comme **take off** reste reconnue en entier, avec le sens suggéré par la phrase et cette proposition à la place du trou. Une case numérotée apparaît uniquement lorsqu’il existe plusieurs sens et ouvre leur liste : 73 expressions, 192 sens, exemples et sources. Un mot avec un seul sens ne porte pas de case « 1 ». Le contexte anglais seul sert à suggérer un sens ; une ambiguïté reste signalée.
 
 L’exercice garde une seule commande **Traduire la phrase**. La correction présente la bonne réponse, une explication et un accès au cours, sans traduction automatique répétée ni encadrés imbriqués. Les indications de survol, les boutons de traduction des choix et les badges techniques ont été retirés.
 
@@ -28,7 +28,7 @@ Cette édition publique ne contient pas les résultats personnels intégrés à 
 
 ## Fichiers
 
-Conserver `TOEIC_Lab.html` et les neuf fichiers JS/CSS du dossier ensemble. `session-visiteur.js` doit être chargé avant tout script d'application. `mobile.css` est chargé à la fin pour compléter les styles intégrés.
+Conserver `TOEIC_Lab.html` et les douze fichiers JS/CSS du dossier ensemble. `session-visiteur.js` doit être chargé avant tout script d'application. `mobile.css` est chargé à la fin pour compléter les styles intégrés.
 
 ## Vérifications
 
@@ -59,3 +59,11 @@ La répartition des 300 questions originales suit le classement principal de 300
 | Relatifs et autres constructions | 8 | 2,7 % |
 
 Cette répartition est observée dans cet échantillon, pas imposée par ETS. Les questions sont originales, relues, et non étalonnées comme un test officiel. Les PDF de référence et les données personnelles restent hors du dépôt public. Le [format officiel décrit par ETS Global](https://www.etsglobal.org/fx/en/help-center/test-content/format-questions-toeic-listening-reading) couvre l’ensemble du test ; cette application entraîne ici la Partie 5.
+
+## Interface et navigation
+
+L’accueil donne directement accès au **TOEIC ciblé** et au **TOEIC blanc**, limités à la Partie 5, puis aux cinq matières de révision. Les tests blancs se filtrent par état : à faire, en pause ou terminés. Le compteur et la grille vont de 1 à 30 ; les références 101 à 130 restent conservées dans les questions.
+
+Dans **Mes mots**, la révision et la recherche passent avant les lexiques facultatifs et les transferts CSV, regroupés dans une section repliable. Dans **Ma progression**, les filtres séparent le ciblé, les blancs et les autres exercices. Les indicateurs portent sur les séances terminées du filtre actif et le graphique affiche leurs pourcentages de bonnes réponses, sans score TOEIC converti.
+
+Naviguer vers l’accueil ou les mots pendant une séance utilise la pause existante. Les fiches conservent l’écran de départ ; un blanc est mis en pause avant leur ouverture. Le clavier garde sa place après les actions et les dialogues : Échap ferme l’éditeur sans enregistrer, les onglets répondent aux flèches et les champs ont des libellés accessibles. Les trois fichiers `interface.css`, `interface-accessible.js` et `interface.js` se chargent après les modules d’exercices ; ils ne changent ni le format des données ni les moteurs d’apprentissage.

@@ -1,7 +1,7 @@
 # Fonctionnalités
 
 - Cours d'anglais, exercices Reading et suivi des réponses issus de la base HTML fournie.
-- Aide sur 57 expressions complètes et 140 sens, avec exemples et sources. Le contexte anglais sert à suggérer un sens ; une ambiguïté reste signalée.
+- Aide sur 73 expressions complètes et 192 sens, avec exemples et sources. Le contexte anglais sert à suggérer un sens ; une ambiguïté reste signalée.
 - Petite bulle de traduction au survol ; compteur seulement à partir de deux sens. Clic sur les mots de la phrase ou des choix pour ouvrir leur fiche et les ajouter aux mots et flashcards, sans cocher la réponse.
 - Menu de profil discret dans l’en-tête : progression, mots, nom/avatar/photo locale et données. Export/import du profil avec la progression ; reprise des séances après navigation.
 - Exercice épuré : traduction sur demande, correction unique et concise, cours accessible, commandes et badges redondants retirés. Sauvegardes repliées à la fin de la progression.
@@ -16,3 +16,12 @@
 - Édition publique sans les observations et réponses personnelles de l'édition locale.
 
 Les vérifications reproductibles sont décrites dans [verification/README.md](verification/README.md). La mémorisation ne synchronise pas plusieurs appareils ; un navigateur privé ou l'effacement des données peut supprimer la progression locale.
+
+- Accueil compact : deux parcours TOEIC Partie 5, cinq matières et raccourcis vers les mots, les cours et la progression.
+- Bibliothèque de blancs compacte et filtrable ; compteur de 1 à 30, états de pause et dernier résultat visibles.
+- Vocabulaire : révision en premier, recherche et filtre de collection, lexiques et outils CSV repliés mais disponibles.
+- Progression filtrable par type de séance, indicateurs et graphique cohérents avec la sélection, action de démarrage lorsque l’historique est vide.
+- Navigation vers les autres rubriques avec pause ; fiches ouvertes sans remplacer l’écran de départ.
+- Focus conservé au clavier, formulaires nommés, éditeur de mot utilisable avec Tab et Échap, arrière-plan des dialogues inerte puis restauré.
+- Palette et typographie cohérentes, contraste renforcé, commandes tactiles de 44 px et respect des animations réduites.
+- Reconnaissance complète des 74 formes d’expressions proposées dans les choix des questions à particule ; priorité des sens personnels sur les anciens alias.

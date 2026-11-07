@@ -10,7 +10,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parent
-APP=ROOT.parent
+APP=Path(os.environ.get('TOEIC_APP_DIR',ROOT.parent))
 CHROMIUM_EXECUTABLE = os.environ.get("CHROMIUM_EXECUTABLE") or shutil.which("brave-browser") or shutil.which("chromium") or shutil.which("chromium-browser")
 (ROOT / "publication").mkdir(exist_ok=True)
 ASSETS='<link rel="stylesheet" href="aide-vocabulaire.css"><script src="lexique-toeic.js"></script><script src="aide-vocabulaire.js"></script>'
@@ -29,7 +29,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 def run():
     server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Handler,directory=str(APP)))
     threading.Thread(target=server.serve_forever,daemon=True).start()
-    url=f'http://127.0.0.1:{server.server_port}/TOEIC_Lab.html'
+    url=os.environ.get('TOEIC_TEST_URL') or f'http://127.0.0.1:{server.server_port}/TOEIC_Lab.html'
     checks=[];errors=[]
     with tempfile.TemporaryDirectory(prefix='toeic-lexique-') as tmp,sync_playwright() as p:
         def launch():
@@ -40,10 +40,10 @@ def run():
         ctx,page=launch()
         coverage=page.evaluate('''() => {
           const options=[...new Set(V6_ALL.filter(q=>q.group==='syntax:phrasal-verbs').flatMap(q=>q.options))];
-          return {total:options.length,missing:options.filter(o=>!window.TOEIC_EXPRESSION_ENTRIES.some(e=>e.term===o)),split:options.filter(o=>{const t=document.createElement('div');t.innerHTML=ToeicLexicon.render(o,false);return t.querySelectorAll('[data-tl-term]').length!==1||t.firstElementChild.textContent!==o;})};
+          return {total:options.length,missing:options.filter(o=>!window.TOEIC_EXPRESSION_ENTRIES.some(e=>[e.term,...(e.forms||[])].includes(o))),split:options.filter(o=>{const t=document.createElement('div');t.innerHTML=ToeicLexicon.render(o,false);return t.querySelectorAll('[data-tl-term]').length!==1||t.firstElementChild.textContent!==o;})};
         }''')
-        assert coverage['total']==57 and not coverage['missing'] and not coverage['split'],coverage
-        checks.append('Les 57 expressions des choix phrasal verbs sont des unités complètes')
+        assert coverage['total']==74 and not coverage['missing'] and not coverage['split'],coverage
+        checks.append('Les 74 expressions et formes des choix phrasal verbs sont des unités complètes')
         for text,term in [('TAKE OFF','take off'),('took off','take off'),('taking off','take off'),('take your coat off','take off'),('handed the form in','hand in'),('put them away','put away'),('look down on','look down on')]:
             result=page.evaluate('''([text,term])=>{const t=document.createElement('div');t.innerHTML=ToeicLexicon.render(text);return [...t.querySelectorAll('[data-tl-term]')].some(x=>x.dataset.tlTerm===term&&x.textContent===text)}''',[text,term])
             assert result,(text,term)

@@ -47,3 +47,10 @@ python3 verification/verifier_blancs_part5.py
 ```
 
 - Fixed Part 5 tests: ten real banks, 300 distinct questions and observed type proportions; editable tentative answers, skip/review, submission only after confirmation, 0/30 and 30/30, pause/resume, four viewports. Ten completed papers create exactly 300 events and observations. Full browser close/reopen and a real export/import preserve unfinished answers and question order. All profiles are disposable; no personal data is loaded.
+
+
+## Interface de novembre 2026
+
+`python3 verification/verifier_interface_visuelle.py` parcourt trente états ordinateur/téléphone, les filtres, les écrans vides, les dialogues et la progression après un vrai blanc. `python3 verification/verifier_accessibilite.py` contrôle dix parcours clavier/dialogues et les pauses sans notation. Ces scripts acceptent `TOEIC_TEST_URL` pour vérifier une publication, et utilisent toujours des contextes neufs.
+
+Le contrôle vocabulaire couvre les 74 formes présentes dans les choix de verbes à particule, y compris les ajouts de la banque récente. Le compteur des blancs est désormais 1 à 30 ; la reprise conserve toujours les références originales dans les données. Les contrôles WebKit, des 66 états mobiles et des profils persistants sont également exécutés pour cette livraison. Ils ne constituent pas un audit de conformité WCAG complet ni un essai avec lecteur d’écran réel.

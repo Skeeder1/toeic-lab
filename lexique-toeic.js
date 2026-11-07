@@ -313,7 +313,15 @@ window.TOEIC_EXPRESSION_ENTRIES = [
     "forms": [
       "catches up",
       "caught up",
-      "catching up"
+      "catching up",
+      "catch up with",
+      "catches up with",
+      "caught up with",
+      "catching up with",
+      "catch up on",
+      "catches up on",
+      "caught up on",
+      "catching up on"
     ],
     "separable": false,
     "senses": [
@@ -340,10 +348,20 @@ window.TOEIC_EXPRESSION_ENTRIES = [
         "context": "We caught up over lunch after the conference.",
         "frenchExample": "Nous avons échangé des nouvelles au déjeuner après la conférence.",
         "note": ""
+      },
+      {
+        "id": "consequences",
+        "meaning": "finir par rattraper quelqu’un, faire sentir ses effets",
+        "type": "conséquence",
+        "context": "Weeks of overwork finally caught up with her.",
+        "frenchExample": "Des semaines de surmenage ont fini par se faire sentir.",
+        "note": "Catch up with someone : des difficultés jusque-là évitées deviennent inévitables.",
+        "cues": "\\b(exhaustion|fatigue|stress|overwork|past mistakes)\\b"
       }
     ],
     "sources": [
-      "https://www.collinsdictionary.com/dictionary/english/catch-up"
+      "https://www.collinsdictionary.com/dictionary/english/catch-up",
+      "https://www.collinsdictionary.com/dictionary/english/catch-up-with"
     ]
   },
   {
@@ -1964,5 +1982,684 @@ window.TOEIC_EXPRESSION_ENTRIES = [
     "sources": [
       "https://www.collinsdictionary.com/dictionary/english/wear-out"
     ]
-  }
+  },
+{
+  "term": "turn on",
+  "forms": [
+    "turns on",
+    "turned on",
+    "turning on"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "activate",
+      "meaning": "allumer, mettre en marche",
+      "type": "équipement",
+      "context": "Turn on the projector before the guests arrive.",
+      "frenchExample": "Allumez le projecteur avant l’arrivée des invités.",
+      "note": "",
+      "cues": "\\b(lights?|projector|printer|heating|tap|faucet|microphone)\\b"
+    },
+    {
+      "id": "hostile",
+      "meaning": "s’en prendre à, se retourner contre",
+      "type": "relations",
+      "context": "The customer suddenly turned on the assistant.",
+      "frenchExample": "Le client s’en est soudain pris à l’assistant.",
+      "note": "Non séparable dans ce sens."
+    },
+    {
+      "id": "depend",
+      "meaning": "dépendre de, reposer sur",
+      "type": "décision",
+      "context": "The outcome turns on the board’s approval.",
+      "frenchExample": "L’issue dépend de l’approbation du conseil.",
+      "note": "Non séparable dans ce sens."
+    },
+    {
+      "id": "display",
+      "meaning": "déployer soudainement, afficher",
+      "type": "comportement",
+      "context": "The salesperson turned on the charm during the presentation.",
+      "frenchExample": "Le commercial a déployé son charme pendant la présentation.",
+      "note": "Souvent avec charm ou style.",
+      "cues": "\\b(charm|style)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/turn-on"
+  ]
+},
+{
+  "term": "give back",
+  "forms": [
+    "gives back",
+    "gave back",
+    "given back",
+    "giving back"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "return",
+      "meaning": "rendre, restituer un objet",
+      "type": "restitution",
+      "context": "Please give back the visitor badge at reception.",
+      "frenchExample": "Rendez le badge visiteur à l’accueil.",
+      "note": "",
+      "cues": "\\b(badge|keys?|books?|borrowed|equipment)\\b"
+    },
+    {
+      "id": "restore",
+      "meaning": "redonner, rendre ce qui avait été perdu",
+      "type": "rétablissement",
+      "context": "The new schedule gave staff back control over their evenings.",
+      "frenchExample": "Le nouvel horaire a redonné aux salariés la maîtrise de leurs soirées.",
+      "note": "Peut porter sur du temps, un droit ou une possibilité."
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/give-back"
+  ]
+},
+{
+  "term": "break down",
+  "forms": [
+    "breaks down",
+    "broke down",
+    "broken down",
+    "breaking down"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "machine",
+      "meaning": "tomber en panne",
+      "type": "équipement",
+      "context": "The delivery truck broke down near the depot.",
+      "frenchExample": "Le camion de livraison est tombé en panne près du dépôt.",
+      "note": "Intransitif dans ce sens.",
+      "cues": "\\b(machinery|engine|vehicle|truck|printer|elevator|lift|equipment)\\b"
+    },
+    {
+      "id": "failure",
+      "meaning": "échouer, se dégrader, cesser de fonctionner",
+      "type": "organisation",
+      "context": "Negotiations broke down over the delivery deadline.",
+      "frenchExample": "Les négociations ont échoué sur la date de livraison.",
+      "note": "",
+      "cues": "\\b(negotiations?|talks?|relations?)\\b"
+    },
+    {
+      "id": "analyse",
+      "meaning": "décomposer, détailler par éléments",
+      "type": "analyse",
+      "context": "The report breaks down costs by department.",
+      "frenchExample": "Le rapport détaille les coûts par service.",
+      "note": "",
+      "cues": "\\b(costs?|figures?|expenses?|totals?)\\b.{0,30}\\b(by|into|per)\\b"
+    },
+    {
+      "id": "decompose",
+      "meaning": "se décomposer, dégrader une substance",
+      "type": "environnement",
+      "context": "These bacteria break down the waste naturally.",
+      "frenchExample": "Ces bactéries décomposent les déchets naturellement.",
+      "note": "",
+      "cues": "\\b(biodegradable|bacteria|enzymes?|chemicals?)\\b"
+    },
+    {
+      "id": "emotion",
+      "meaning": "craquer, fondre en larmes",
+      "type": "émotion",
+      "context": "She broke down in tears after the announcement.",
+      "frenchExample": "Elle a fondu en larmes après l’annonce.",
+      "note": "Intransitif dans ce sens.",
+      "cues": "\\b(tears|crying|cried)\\b"
+    },
+    {
+      "id": "force",
+      "meaning": "enfoncer, abattre par la force",
+      "type": "sécurité",
+      "context": "The rescue team broke down the locked door.",
+      "frenchExample": "L’équipe de secours a enfoncé la porte verrouillée.",
+      "note": "",
+      "cues": "\\b(door|barricade)\\b"
+    },
+    {
+      "id": "barrier",
+      "meaning": "faire tomber des obstacles, des barrières",
+      "type": "coopération",
+      "context": "Joint projects break down barriers between departments.",
+      "frenchExample": "Les projets communs font tomber les barrières entre services.",
+      "note": "",
+      "cues": "\\bbarriers?\\b.{0,35}\\b(between|communication|departments?|teams?)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/break-down"
+  ]
+},
+{
+  "term": "shut down",
+  "forms": [
+    "shuts down",
+    "shutting down"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "business",
+      "meaning": "fermer, cesser son activité",
+      "type": "entreprise",
+      "context": "The branch will shut down at the end of June.",
+      "frenchExample": "L’agence fermera à la fin de juin.",
+      "note": "Shut reste identique au passé et au participe passé.",
+      "cues": "\\b(branch|factory|plant|business|store|shop)\\b"
+    },
+    {
+      "id": "equipment",
+      "meaning": "arrêter, mettre hors service",
+      "type": "équipement",
+      "context": "Shut down the computer before cleaning the desk.",
+      "frenchExample": "Éteignez l’ordinateur avant de nettoyer le bureau.",
+      "note": "Arrêt du fonctionnement, volontaire ou subi.",
+      "cues": "\\b(computers?|servers?|systems?|machines?|equipment)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/shut-down"
+  ]
+},
+{
+  "term": "put forward",
+  "forms": [
+    "puts forward",
+    "putting forward"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "propose",
+      "meaning": "proposer, présenter une idée",
+      "type": "proposition",
+      "context": "The team put forward a cheaper delivery plan.",
+      "frenchExample": "L’équipe a proposé un plan de livraison moins coûteux.",
+      "note": "Put reste identique au passé et au participe passé.",
+      "cues": "\\b(plan|proposal|idea|suggestion|argument)\\b"
+    },
+    {
+      "id": "nominate",
+      "meaning": "proposer une candidature, un nom",
+      "type": "recrutement",
+      "context": "The director put her name forward for the vacancy.",
+      "frenchExample": "La directrice a proposé sa candidature pour le poste vacant.",
+      "note": "Souvent put someone’s name forward for a position.",
+      "cues": "\\b(name|candidate|nomination|nominee)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/put-forward"
+  ]
+},
+{
+  "term": "set off",
+  "forms": [
+    "sets off",
+    "setting off"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "depart",
+      "meaning": "partir, se mettre en route",
+      "type": "déplacement",
+      "context": "We set off for the trade fair before dawn.",
+      "frenchExample": "Nous sommes partis pour le salon avant l’aube.",
+      "note": "Set reste identique au passé et au participe passé ; intransitif ici.",
+      "cues": "\\b(for|on)\\s+(?:the\\s+)?(trade fair|journey|trip|airport)\\b"
+    },
+    {
+      "id": "alarm",
+      "meaning": "déclencher une alarme ou un dispositif",
+      "type": "sécurité",
+      "context": "Steam from the kitchen set off the alarm.",
+      "frenchExample": "La vapeur de la cuisine a déclenché l’alarme.",
+      "note": "",
+      "cues": "\\b(alarm|detector|explosive|explosion)\\b"
+    },
+    {
+      "id": "cause",
+      "meaning": "déclencher un événement ou une réaction",
+      "type": "conséquence",
+      "context": "The announcement set off a wave of enquiries.",
+      "frenchExample": "L’annonce a déclenché une vague de demandes.",
+      "note": "",
+      "cues": "\\b(wave|chain|series|reaction|debate|dispute)\\b"
+    },
+    {
+      "id": "contrast",
+      "meaning": "mettre en valeur par contraste",
+      "type": "présentation",
+      "context": "The dark frame sets off the bright poster.",
+      "frenchExample": "Le cadre sombre met en valeur l’affiche claire.",
+      "note": "",
+      "cues": "\\b(frame|colou?r|contrast|jewellery|jewelry)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/set-off"
+  ]
+},
+{
+  "term": "look forward to",
+  "forms": [
+    "looks forward to",
+    "looked forward to",
+    "looking forward to"
+  ],
+  "separable": false,
+  "senses": [
+    {
+      "id": "eager",
+      "meaning": "attendre avec plaisir, avoir hâte de",
+      "type": "attente",
+      "context": "We look forward to welcoming you at our new office.",
+      "frenchExample": "Nous avons hâte de vous accueillir dans nos nouveaux bureaux.",
+      "note": "To est une préposition : suivi d’un nom ou d’une forme en -ing. Dans un courrier : dans l’attente de votre réponse."
+    },
+    {
+      "id": "expect",
+      "meaning": "espérer, s’attendre à une évolution positive",
+      "type": "perspective",
+      "context": "The company is looking forward to stronger sales next quarter.",
+      "frenchExample": "L’entreprise espère des ventes plus élevées au prochain trimestre.",
+      "note": ""
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/look-forward-to"
+  ]
+},
+{
+  "term": "turn off",
+  "forms": [
+    "turns off",
+    "turned off",
+    "turning off"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "stop",
+      "meaning": "éteindre, couper l’alimentation",
+      "type": "équipement",
+      "context": "Turn off the heating when you leave the building.",
+      "frenchExample": "Coupez le chauffage en quittant le bâtiment.",
+      "note": "",
+      "cues": "\\b(lights?|projector|printer|heating|tap|faucet|microphone)\\b"
+    },
+    {
+      "id": "road",
+      "meaning": "quitter une route, bifurquer",
+      "type": "itinéraire",
+      "context": "Turn off the main road after the bridge.",
+      "frenchExample": "Quittez la route principale après le pont.",
+      "note": "Intransitif ou suivi directement de la route.",
+      "cues": "\\b(road|highway|motorway|path|junction)\\b"
+    },
+    {
+      "id": "discourage",
+      "meaning": "rebuter, faire perdre l’intérêt",
+      "type": "réaction",
+      "context": "Long forms can turn customers off.",
+      "frenchExample": "Les formulaires longs peuvent rebuter les clients.",
+      "note": "Souvent turn someone off something."
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/turn-off"
+  ]
+},
+{
+  "term": "drop by",
+  "forms": [
+    "drops by",
+    "dropped by",
+    "dropping by"
+  ],
+  "separable": false,
+  "senses": [
+    {
+      "id": "visit",
+      "meaning": "passer voir quelqu’un, faire un bref passage",
+      "type": "visite",
+      "context": "Drop by our stand after the presentation.",
+      "frenchExample": "Passez à notre stand après la présentation.",
+      "note": "Visite souvent informelle, parfois sans rendez-vous."
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/drop-by"
+  ]
+},
+{
+  "term": "fill in",
+  "forms": [
+    "fills in",
+    "filled in",
+    "filling in"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "form",
+      "meaning": "remplir un formulaire, compléter une case",
+      "type": "document",
+      "context": "Fill in the application form before Friday.",
+      "frenchExample": "Remplissez le formulaire de candidature avant vendredi.",
+      "note": "Fill out est courant en anglais américain.",
+      "cues": "\\b(form|application|questionnaire|fields?|blanks?)\\b"
+    },
+    {
+      "id": "brief",
+      "meaning": "mettre au courant, donner les détails",
+      "type": "information",
+      "context": "Please fill me in on the revised schedule.",
+      "frenchExample": "Mettez-moi au courant du nouvel horaire.",
+      "note": "Fill someone in on something.",
+      "cues": "\\b(fill|fills|filled|filling)\\s+(us|me|him|her|them|you)\\s+in\\s+on\\b"
+    },
+    {
+      "id": "substitute",
+      "meaning": "remplacer temporairement quelqu’un",
+      "type": "personnel",
+      "context": "A colleague will fill in for me on Monday.",
+      "frenchExample": "Un collègue me remplacera lundi.",
+      "note": "Fill in for someone ; non séparable ici.",
+      "cues": "\\b(fill|fills|filled|filling)\\s+in\\s+for\\b"
+    },
+    {
+      "id": "hole",
+      "meaning": "combler un trou, reboucher",
+      "type": "travaux",
+      "context": "Workers filled in the trench after the inspection.",
+      "frenchExample": "Les ouvriers ont rebouché la tranchée après l’inspection.",
+      "note": "",
+      "cues": "\\b(holes?|cavity|cavities|potholes?|trench)\\b"
+    },
+    {
+      "id": "colour",
+      "meaning": "colorier, remplir une surface",
+      "type": "graphisme",
+      "context": "Fill in the outlined area with blue.",
+      "frenchExample": "Coloriez en bleu la zone délimitée.",
+      "note": "",
+      "cues": "\\b(colou?r|shaded?|outline|outlined)\\b"
+    },
+    {
+      "id": "time",
+      "meaning": "occuper le temps disponible",
+      "type": "temps",
+      "context": "We filled in the time by checking our notes.",
+      "frenchExample": "Nous avons occupé ce temps en vérifiant nos notes.",
+      "note": "",
+      "cues": "\\b(fill|fills|filled|filling)\\s+in\\s+(?:the\\s+)?time\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/fill-in"
+  ]
+},
+{
+  "term": "hold on",
+  "forms": [
+    "holds on",
+    "held on",
+    "holding on",
+    "hold on to",
+    "holds on to",
+    "held on to",
+    "holding on to",
+    "hold onto",
+    "holds onto",
+    "held onto",
+    "holding onto"
+  ],
+  "separable": false,
+  "senses": [
+    {
+      "id": "wait",
+      "meaning": "patienter, rester en ligne",
+      "type": "téléphone",
+      "context": "Please hold on while I transfer your call.",
+      "frenchExample": "Veuillez patienter pendant que je transfère votre appel.",
+      "note": "",
+      "cues": "\\b(call|line|transfer|operator|minute|moment|second)\\b"
+    },
+    {
+      "id": "grip",
+      "meaning": "tenir bon, s’agripper",
+      "type": "sécurité",
+      "context": "Hold on to the handrail when the shuttle moves.",
+      "frenchExample": "Tenez-vous à la rampe quand la navette démarre.",
+      "note": "Hold on to something ; hold onto est aussi possible.",
+      "cues": "\\b(handrail|railing|grip|handle|rope)\\b"
+    },
+    {
+      "id": "persist",
+      "meaning": "tenir bon, résister malgré les difficultés",
+      "type": "effort",
+      "context": "The small firm held on through a difficult winter.",
+      "frenchExample": "La petite entreprise a tenu bon pendant un hiver difficile.",
+      "note": ""
+    },
+    {
+      "id": "retain",
+      "meaning": "garder, conserver",
+      "type": "conservation",
+      "context": "Hold on to your receipt until the refund arrives.",
+      "frenchExample": "Conservez votre reçu jusqu’au remboursement.",
+      "note": "Hold on to something.",
+      "cues": "\\b(receipt|tickets?|records?|documents?|possession)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/hold-on"
+  ]
+},
+{
+  "term": "sign up for",
+  "forms": [
+    "signs up for",
+    "signed up for",
+    "signing up for"
+  ],
+  "separable": false,
+  "senses": [
+    {
+      "id": "register",
+      "meaning": "s’inscrire à, s’engager pour",
+      "type": "inscription",
+      "context": "Employees can sign up for the safety workshop online.",
+      "frenchExample": "Les salariés peuvent s’inscrire en ligne à l’atelier de sécurité.",
+      "note": "Cours, service, activité ou engagement contractuel."
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/sign-up"
+  ]
+},
+{
+  "term": "check in",
+  "forms": [
+    "checks in",
+    "checked in",
+    "checking in"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "hotel",
+      "meaning": "faire son arrivée, s’enregistrer à l’hôtel",
+      "type": "hébergement",
+      "context": "You can check in at the hotel after three.",
+      "frenchExample": "Vous pouvez vous enregistrer à l’hôtel après quinze heures.",
+      "note": "",
+      "cues": "\\b(hotel|motel|guesthouse|room|receptionist)\\b"
+    },
+    {
+      "id": "flight",
+      "meaning": "s’enregistrer pour un vol",
+      "type": "transport",
+      "context": "Passengers should check in two hours before departure.",
+      "frenchExample": "Les passagers doivent s’enregistrer deux heures avant le départ.",
+      "note": "",
+      "cues": "\\b(passengers?|airport|flight|airline|boarding)\\b"
+    },
+    {
+      "id": "arrival",
+      "meaning": "signaler ou enregistrer son arrivée",
+      "type": "accueil",
+      "context": "All contractors must check in at the site office.",
+      "frenchExample": "Tous les prestataires doivent signaler leur arrivée au bureau du chantier.",
+      "note": "Peut aussi se dire d’un salarié, d’un visiteur ou d’un participant."
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/check-in"
+  ]
+},
+{
+  "term": "come across",
+  "forms": [
+    "comes across",
+    "came across",
+    "coming across"
+  ],
+  "separable": false,
+  "senses": [
+    {
+      "id": "find",
+      "meaning": "trouver ou rencontrer par hasard",
+      "type": "découverte",
+      "context": "I came across an old invoice while clearing the cabinet.",
+      "frenchExample": "J’ai retrouvé par hasard une ancienne facture en vidant l’armoire.",
+      "note": "",
+      "cues": "\\b(by chance|accidentally|while (?:sorting|clearing|searching))\\b"
+    },
+    {
+      "id": "impression",
+      "meaning": "donner une impression, paraître",
+      "type": "communication",
+      "context": "The speaker came across as confident and well prepared.",
+      "frenchExample": "L’intervenant a paru sûr de lui et bien préparé.",
+      "note": "Souvent come across as + adjectif ou nom.",
+      "cues": "\\b(come|comes|came|coming)\\s+across\\s+as\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/come-across"
+  ]
+},
+{
+  "term": "look up",
+  "forms": [
+    "looks up",
+    "looked up",
+    "looking up"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "search",
+      "meaning": "rechercher une information, consulter",
+      "type": "recherche",
+      "context": "Look up the order number in the customer database.",
+      "frenchExample": "Recherchez le numéro de commande dans la base clients.",
+      "note": "",
+      "cues": "\\b(dictionary|database|directory|reference|address|order number)\\b"
+    },
+    {
+      "id": "visit",
+      "meaning": "reprendre contact avec, rendre visite à",
+      "type": "relations",
+      "context": "Look me up when you next visit our city.",
+      "frenchExample": "Contactez-moi lors de votre prochain passage dans notre ville.",
+      "note": "Souvent look someone up."
+    },
+    {
+      "id": "improve",
+      "meaning": "s’améliorer, reprendre",
+      "type": "conjoncture",
+      "context": "Business is looking up after a slow spring.",
+      "frenchExample": "L’activité reprend après un printemps difficile.",
+      "note": "Intransitif ; souvent à la forme looking up.",
+      "cues": "\\b(business|things|prospects|situation|economy)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/look-up"
+  ]
+},
+{
+  "term": "take back",
+  "forms": [
+    "takes back",
+    "took back",
+    "taken back",
+    "taking back"
+  ],
+  "separable": true,
+  "senses": [
+    {
+      "id": "return",
+      "meaning": "rapporter, rendre un article",
+      "type": "retour",
+      "context": "Take back the damaged printer to the shop.",
+      "frenchExample": "Rapportez l’imprimante endommagée au magasin.",
+      "note": "",
+      "cues": "\\b(shop|store|refund|damaged|faulty|defective|borrowed)\\b"
+    },
+    {
+      "id": "retract",
+      "meaning": "retirer ses paroles, se rétracter",
+      "type": "déclaration",
+      "context": "The manager took back his criticism after the review.",
+      "frenchExample": "Le responsable a retiré ses critiques après l’examen.",
+      "note": "",
+      "cues": "\\b(criticism|remark|statement|accusation|what .{0,15}said)\\b"
+    },
+    {
+      "id": "regain",
+      "meaning": "reprendre possession de",
+      "type": "possession",
+      "context": "The owner took back control of the company.",
+      "frenchExample": "Le propriétaire a repris le contrôle de l’entreprise.",
+      "note": "",
+      "cues": "\\b(control|possession|ownership)\\b"
+    },
+    {
+      "id": "readmit",
+      "meaning": "reprendre, accepter le retour de quelqu’un",
+      "type": "réintégration",
+      "context": "The firm took back the employee after the dispute.",
+      "frenchExample": "L’entreprise a réintégré le salarié après le conflit.",
+      "note": ""
+    },
+    {
+      "id": "memory",
+      "meaning": "rappeler le passé, faire revivre un souvenir",
+      "type": "souvenir",
+      "context": "The old company photographs took her back to her first job.",
+      "frenchExample": "Les anciennes photos de l’entreprise lui ont rappelé son premier emploi.",
+      "note": "Souvent take someone back to a time.",
+      "cues": "\\b(memories|childhood|first job|years ago)\\b"
+    }
+  ],
+  "sources": [
+    "https://www.collinsdictionary.com/dictionary/english/take-back"
+  ]
+}
 ];

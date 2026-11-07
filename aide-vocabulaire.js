@@ -23,11 +23,16 @@
       const seen=new Set(own.map(s=>norm(s.meaning)));
       entries.set(k,{...prior,...e,senses:[...own,...(prior?.senses||[]).filter(s=>!seen.has(norm(s.meaning)))]});
     }
-    for (const e of entries.values()) {
+    // Prefer personal entries, then the explicit lexicon, over legacy phrase aliases.
+    const personalTerms=new Set((window.__toeicVocabBridge?.list() || []).map(e=>norm(e.term)));
+    const explicitTerms=new Set((window.TOEIC_EXPRESSION_ENTRIES || []).map(e=>norm(e.term)));
+    const priority=e=>personalTerms.has(norm(e.term))?2:explicitTerms.has(norm(e.term))?1:0;
+    const ordered=[...entries.values()].sort((a,b)=>priority(b)-priority(a));
+    for (const e of ordered) {
       e.senses=(e.senses||[]).filter(s=>s.meaning);
       if (!e.senses.length) continue;
       for (const f of [e.term,...(e.forms||[])]) {
-        aliases.set(norm(f),norm(e.term));
+        if (!aliases.has(norm(f))) aliases.set(norm(f),norm(e.term));
         patterns.push({entry:e,re:new RegExp('\\b'+norm(f).split(' ').map(escapeRE).join('\\s+')+'\\b','gi')});
       }
       if (e.separable && norm(e.term).split(' ').length===2) {
