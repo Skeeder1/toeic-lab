@@ -156,7 +156,7 @@ def run():
             assert page.locator("[data-tv-save-profile]").is_enabled()
             page.locator("[data-tv-name]").fill("Camille")
             page.locator("[data-tv-photo]").set_input_files(str(photo_file))
-            page.wait_for_function("document.querySelector('[data-tv-preview] img')?.naturalWidth === 192 && !document.querySelector('[data-tv-save-profile]').disabled")
+            page.wait_for_function("() => document.querySelector('[data-tv-preview] img')?.naturalWidth === 192 && !document.querySelector('[data-tv-save-profile]').disabled")
             avatar = page.locator("[data-tv-avatar]").last
             avatar.click()
             fit(page, "editor-390")

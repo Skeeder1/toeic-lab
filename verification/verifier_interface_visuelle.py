@@ -11,7 +11,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
   super().do_GET()
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Handler,directory=str(APP)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
-report={'checks':[],'errors':[],'console':[],'overflow':[],'small_controls':[],'states':[]}
+url=os.environ.get('TOEIC_TEST_URL') or f'http://127.0.0.1:{server.server_port}/TOEIC_Lab.html'
+report={'url':url,'checks':[],'errors':[],'console':[],'overflow':[],'small_controls':[],'states':[]}
 with sync_playwright() as p:
  browser=p.chromium.launch(headless=True,executable_path='/usr/bin/brave-browser')
  for width,height in [(390,844),(1440,1050)]:
@@ -19,7 +20,7 @@ with sync_playwright() as p:
   page=context.new_page();page.set_default_timeout(7000)
   page.on('pageerror',lambda e:report['errors'].append(str(e)))
   page.on('console',lambda e:report['console'].append(e.text) if e.type=='error' else None)
-  page.goto(os.environ.get('TOEIC_TEST_URL') or f'http://127.0.0.1:{server.server_port}/TOEIC_Lab.html');page.locator('[data-tv-temporary]').click()
+  page.goto(url);page.locator('[data-tv-temporary]').click()
   def snap(name):
    page.wait_for_timeout(100)
    page.screenshot(path=str(ROOT/f'controle-{name}-{width}.png'),full_page=True)
@@ -70,7 +71,7 @@ with sync_playwright() as p:
  # Generate a genuine completed mock using real form controls, then inspect filters.
  context=browser.new_context(viewport={'width':390,'height':844});page=context.new_page();page.set_default_timeout(7000)
  page.on('pageerror',lambda e:report['errors'].append(str(e)))
- page.goto(f'http://127.0.0.1:{server.server_port}/TOEIC_Lab.html');page.locator('[data-tv-temporary]').click();page.locator('[data-tm-library]').click();page.locator('[data-tm-start="part5-01"]').click()
+ page.goto(url);page.locator('[data-tv-temporary]').click();page.locator('[data-tm-library]').click();page.locator('[data-tm-start="part5-01"]').click()
  for i in range(30):
   page.locator('[data-tm-answer="0"]').click()
   if i<29:page.locator('[data-tm-next]').click()
